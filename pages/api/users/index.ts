@@ -1,36 +1,16 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import Odoo from 'async-odoo-xmlrpc';
-import { getOdoo } from "../../../clients/odoo";
+import getOdooSession from '../../../utils/getOdooSession';
 
 let odoo : Odoo | null;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     try {
-        const { user } = req.body;
-        console.log("Checking user: ", { user })
-      if (!odoo) odoo  = await getOdoo();
-      if (!odoo) return res.status(500).send("OdooNotInitialized")
-      
-      /* Create User */
-      if (req.method === "POST") {
-        // Assuming your request body contains user data, adapt this to your actual data structure
-        const { name, login, password } = req.body;
-  
-        // Create user data
-        const userData = {
-          name,
-          login,
-          password,
-          // Add other necessary user details
-        };
-  
-        // Call Odoo API to create a user
-        const userId = await odoo.execute_kw("res.users", "create", [userData]);
-  
-        res.status(200).json({ userId, message: "User created successfully" });
-      } 
-      /* Find Users */
-      else if (req.method === "GET") {
+        const odoo = await getOdooSession(req,res);
+        if(!odoo) throw Error("InvalidOdooPermissions");
+        console.log("[users]GET:", odoo)
+        
+        if (req.method === "GET") {
         const search_domain: string[] = [] 
         const user_ids = await odoo.execute_kw('res.users', 'search', [search_domain])
 
@@ -50,8 +30,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.status(405).json({ message: "Method Not Allowed" });
       }
       
-    } catch (e) {
+    } catch (e : Error | any | null) {
       console.error(e);
-      res.status(500).json({ message: 'Something went wrong...' });
+      res.status(500).json({ message: e.message });
     }
   }

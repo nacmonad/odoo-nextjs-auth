@@ -26,7 +26,7 @@ async function handler(
     const search_domain: string[] = [] 
     let group_details;
     const group_ids = await odoo.execute_kw('res.groups', 'search', [search_domain])
-
+    console.log("[hello]group_ids", group_ids)
     if (group_ids){
         group_details = await odoo.execute_kw('res.groups', 'read', [group_ids])
     }

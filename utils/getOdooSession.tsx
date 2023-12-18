@@ -14,7 +14,7 @@ export default async function(req:NextApiRequest,res: NextApiResponse) {
         const odoo = new Odoo({
             username, 
             password, 
-            db:process.env.ODOO_DB_NAME, 
+            db:process.env.ODOO_DB, 
             port: 443,
             url: process.env.ODOO_URL});
         await odoo.connect();
