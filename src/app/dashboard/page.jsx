@@ -23,7 +23,7 @@ const DashboardPage = async ( ) => {
     const { host, port, db, username, secure, uid, partner_id, user, partner } = odoo;
     
     console.log("[DashboardPage]getPoints", odoo)
-    const points_res = await fetch(`${process.env.NEXT_APP_HOST}/api/points`, {
+    const points_res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/points`, {
         method:'GET',
         headers:{
             'Content-Type': 'application/json',

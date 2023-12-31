@@ -53,7 +53,7 @@ export const MainContextProvider: React.FC<MainContextProviderProps> = ({ childr
     qrCode,
     subscription,
   };
-
+  console.log("[mainCtx]", process.env.NEXT_APP_PUSH_HOST)
   function initRssFeeds() {
     if ('Notification' in window) {
         Notification.requestPermission().then(permission => {
@@ -71,7 +71,7 @@ export const MainContextProvider: React.FC<MainContextProviderProps> = ({ childr
                       headers.append('Content-Type', 'application/json');
                       headers.append('x-odoo-partner-id', String(partner.id));
 
-                    fetch(`http://localhost:8081/api/subscribe`, {
+                    fetch(`${process.env.NEXT_PUBLIC_PUSH_HOST}/api/subscribe`, {
                       method:"POST",
                       headers,
                       body: JSON.stringify(subscription)
