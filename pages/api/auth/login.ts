@@ -1,46 +1,63 @@
 // pages/api/auth/login.js
 //import { withIronSession } from 'iron-session';
 import { withIronSession } from '../../../node_modules/next-iron-session/lib/index';
-import { NextApiRequest, NextApiResponse } from '../../../node_modules/next/dist/shared/lib/utils';
+import { NextApiResponse } from '../../../node_modules/next/dist/shared/lib/utils';
 
-import sessionConfig from '../../../utils/session';
+import sessionConfig from '../../../src/utils/session';
+import initAdminOdoo from '@/utils/odooAdminClient';
 
-import { NextApiRequestWithSession } from '../../../types';
 import Odoo from '../../../node_modules/async-odoo-xmlrpc/lib/index';
+import { OdooSession, NextApiRequestWithSession } from '@/types/index';
+
 
 async function handler(req:NextApiRequestWithSession, res:NextApiResponse) {
   // Retrieve credentials from the request body
-  const { username, password } = req.body;
+  const { username, password } = req.body || req.query;
 
+  console.log("[login]", { username, password })
   try{
     // Initialize Odoo client
-    const odoo = new Odoo({
+    const odoo : Odoo = new Odoo({
         username, 
         password, 
         db:process.env.ODOO_DB, 
         url: process.env.ODOO_URL,
         port: 443,
     });
+    
+    console.log("[login]", odoo);
     const uid = await odoo.connect();
-    console.log("[login]uid", uid)
+
+     // Retrieve user information (including partner_id)
+     const odooAdmin = await initAdminOdoo();
+     const userData = await odooAdmin.execute_kw('res.users', 'read', [[uid], ['complete_name', 'email_normalized',  'partner_id',  'lang', 'tz','groups_id']]);
+     const partnerId = userData[0].partner_id[0];
+     const partnerData = await odooAdmin.execute_kw('res.partner', 'read', [[partnerId], ['complete_name', 'email_normalized', 'is_blacklisted']]);
+
+     const odooSession : OdooSession = {
+        ...odoo,
+        uid,
+        partner_id: partnerId,
+        user: userData[0],
+        partner: partnerData[0]
+     }
+
+     delete odoo.password;
     
   if (odoo) {
     // Store Odoo client in session
-    req.session.set('odoo', odoo); // Set the 'odoo' property in the session
-    req.session.odoo = odoo;
+    //delete odoo.password;
+    req.session.set('odoo', odooSession); // Set the 'odoo' property in the session
     await req.session.save();
-
-    req.session.odoo = odoo;
-
     // Send success response
-    res.status(200).json({ success: true, client:odoo });
+    res.redirect(302, `/dashboard`);
   } else {
     // Send authentication failure response
-    res.status(401).json({ success: false, message: 'Authentication failed' });
+    res.status(302).redirect(`/login?error=Authentication failed`);
   }
-  } catch(e) {
+  } catch(e : Error | any) {
     console.error(e)
-    res.status(500).json({ error: e })
+    res.status(302).redirect(`/login?error=${e.message}`)
   }
 }
 

@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import Odoo from 'async-odoo-xmlrpc';
-import getOdooSession from '../../../utils/getOdooSession';
+import getOdooSession from '../../../src/utils/getOdooSession';
 
 let odoo : Odoo | null;
 

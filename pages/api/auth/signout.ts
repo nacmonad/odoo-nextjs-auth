@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getIronSession } from "../../../node_modules/iron-session/dist/index.cjs";
-import sessionConfig from "../../../utils/session";
+import sessionConfig from "../../../src/utils/session";
 // pages/api/auth/signout.js
 export default async function handler(req:NextApiRequest, res: NextApiResponse) {
 
@@ -13,6 +13,6 @@ export default async function handler(req:NextApiRequest, res: NextApiResponse) 
     }
   
     // Send success response
-    res.status(200).json({ success: true });
+    res.status(302).redirect(`/`);
   }
   
