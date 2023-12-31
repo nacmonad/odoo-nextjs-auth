@@ -44,7 +44,7 @@ export default async function handler(
 
     //PUSH POINT AWARDED EVENT TO THE RECIPIENT
     try {
-      await fetch(`${process.env.NEXT_APP_PUSH_HOST}/api/push`, {
+      await fetch(`${process.env.NEXT_PUBLIC_PUSH_HOST}/api/push`, {
         method:"POST",
         headers: {
           "Content-Type": "application/json",
