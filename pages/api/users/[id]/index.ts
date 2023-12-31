@@ -1,13 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import Odoo from 'async-odoo-xmlrpc';
-import { getOdoo } from '../../../../clients/odoo';
+import getOdooSession from '@/utils/getOdooSession';
 
-
-let odoo : Odoo | null; // Variable to store the initialized Odoo client
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     try {
-      if (!odoo) odoo = await getOdoo();
+      let odoo : Odoo | null = await getOdooSession(req, res);
+
       if (!odoo) return res.status(500).send("OdooNotInitialized")
       
       /* GET /api/users/[id] */

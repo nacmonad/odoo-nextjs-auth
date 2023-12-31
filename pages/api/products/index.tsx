@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import getOdooSession from '../../../utils/getOdooSession';
+import getOdooSession from '@/utils/getOdooSession';
 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -16,10 +16,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const offset = (page - 1) * pageSize;
 
       const search_domain: [string, string, string] = ['is_published', '=', 'true'];
-      const productTemplateIds = await odoo.execute_kw('product.product', 'search', [[search_domain]], {
-        offset,
-        limit: pageSize,
-      });
+      const productTemplateIds = await odoo.execute_kw('product.product', 'search', [[search_domain]]);
 
       if (productTemplateIds) {
         const productTemplates = await odoo.execute_kw('product.template', 'read', [productTemplateIds]);
