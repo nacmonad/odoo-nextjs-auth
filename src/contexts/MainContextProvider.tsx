@@ -53,7 +53,7 @@ export const MainContextProvider: React.FC<MainContextProviderProps> = ({ childr
     qrCode,
     subscription,
   };
-  console.log("[mainCtx]", process.env.NEXT_APP_PUSH_HOST)
+  console.log("[mainCtx]", process.env.NEXT_PUBLIC_PUSH_HOST)
   function initRssFeeds() {
     if ('Notification' in window) {
         Notification.requestPermission().then(permission => {
@@ -63,7 +63,8 @@ export const MainContextProvider: React.FC<MainContextProviderProps> = ({ childr
 
             // Subscribe to the push events
             navigator.serviceWorker.ready.then(registration => {
-                registration.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: 'BHD-ku1v6YwBXY8feO6LG911xkTlTl7rmdvRwAUujpmPPi7OmMXVS69eEmA_l1OQQH9wprOLxBQn_PYqtZR-7d4' })
+                console.log("Service Worker Registered", registration)
+                registration.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: process.env.NEXT_PUBLIC_APPLICATION_SERVER_KEY })
                   .then(subscription => {
                     // Send the subscription details to your server
                     if(partner) {

@@ -5,35 +5,26 @@ import getOdooSession from '@/utils/getOdooSession';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     try {
+      const userId = parseInt(req.query.id);
+      const { fields = [ ]} = req.query;
+
+
       let odoo : Odoo | null = await getOdooSession(req, res);
 
-      if (!odoo) return res.status(500).send("OdooNotInitialized")
-      
+      if (!odoo) return res.status(500).send("OdooNotInitialized");
+      if(odoo.uid != userId) return res.status(403).send("Forbidden");
+
+      console.log("[users]GET:", req.query)
+
       /* GET /api/users/[id] */
       if (req.method === "GET") {
+        const fieldsArray = Array.isArray(fields) ? fields : JSON.parse(fields || '[]');
 
-        const search_domain: string[] = [] 
-        const group_ids = odoo.execute_kw('res.groups', 'search', [search_domain])
+        // Retrieve details of the first user found (assuming unique IDs)
+        const userDetails = await odoo.execute_kw('res.users', 'read', [[userId], fieldsArray]);
+        console.log("userDetails", userDetails)
+        res.status(200).json({ user: userDetails[0] });
 
-        if (group_ids){
-            const group_details = odoo.execute_kw('res.groups', 'read', [group_ids])
-            console.log(`GroupIDs:`, group_ids)}
-        else {
-            console.log("No groups found.")
-        }
-
-        // Get the user with a specific ID from the URL parameter
-        const userId = req.query.id as string;
-        const searchDomain = [['id', '=', parseInt(userId)]];
-        const userIDs = await odoo.execute_kw('res.users', 'search', [searchDomain]);
-
-        if (userIDs.length > 0) {
-            // Retrieve details of the first user found (assuming unique IDs)
-            const userDetails = await odoo.execute_kw('res.users', 'read', [userIDs[0]]);
-            res.status(200).json({ userDetails });
-        } else {
-            res.status(404).json({ message: "User not found" });
-        }
       } 
       /* DELETE /api/users/[id] */
       else if (req.method === "DELETE") {
