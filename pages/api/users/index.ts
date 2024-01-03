@@ -6,16 +6,18 @@ let odoo : Odoo | null;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     try {
+
+        const { fields=[] } = req.query;
+
         const odoo = await getOdooSession(req,res);
         if(!odoo) throw Error("InvalidOdooPermissions");
-        console.log("[users]GET:", odoo)
         
         if (req.method === "GET") {
         const search_domain: string[] = [] 
         const user_ids = await odoo.execute_kw('res.users', 'search', [search_domain])
 
         if (user_ids){
-            const users = await odoo.execute_kw('res.users', 'read', [user_ids])
+            const users = await odoo.execute_kw('res.users', 'read', [[user_ids], fields])
             res.status(200).json( { users })
         }
         else {

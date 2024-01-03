@@ -1,7 +1,10 @@
 'use client';
 // pages/login.js
-import React, { useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
+import React, { FormEvent, useEffect, useRef, useState } from 'react';
+import {Button} from '@nextui-org/button';
+import {Input} from '@nextui-org/input';
+import {Link} from '@nextui-org/link';
+import { useRouter } from 'next/navigation';
 
 interface LoginPageProps {
   searchParams: {
@@ -12,12 +15,11 @@ interface LoginPageProps {
 
 
 const LoginPage : React.FC<LoginPageProps> = ( props ) => { 
-  const { searchParams } = props;
-  const { error } = searchParams;
-
-  const [hideError, setHideError] = useState(false);
-  const [username, setUsername] = useState(``);
-  const [password, setPassword] = useState(``)
+  const router = useRouter();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<null|string>(null);
+  const [username, setUsername] = useState<string>(``);
+  const [password, setPassword] = useState<string>(``)
 
   function handleChange(e:React.ChangeEvent<HTMLInputElement>) {
     
@@ -26,61 +28,84 @@ const LoginPage : React.FC<LoginPageProps> = ( props ) => {
 
       if(name==="username") setUsername(value);
       if(name==="password") setPassword(value);
-      if(error) setHideError(true);
+      if(error) setError(null);
+  }
+
+  async function handleSubmit(e:FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    try {
+      const r = await fetch(`/api/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ username, password })
+      })
+      const u = await r.json();
+      console.log("LoggedIn", u);
+
+      if(u.error) setError(u.error);
+      if(u.odoo) router.push('/dashboard')
+    } catch(e)  {
+      if(e instanceof Error && e.message) setError(e.message);
+    }
+
+    setLoading(false);
   }
 
   return (
       <div className="min-h-screen flex items-center justify-center bg-black text-white">
-        <div className="bg-gray-800 p-8 rounded-md shadow-md text-white min-w-96">
+        <div className="bg-gray-800 p-8 rounded-md shadow-md text-white w-96">
           <h1 className="text-3xl font-bold mb-6">Login</h1>
-          <form action={`/api/auth/login`} method="POST">
+          <form onSubmit={handleSubmit}>
             <div className="mb-4">
-              <label htmlFor="username" className="block text-sm font-medium">
-                Username:
-              </label>
-              <input
+
+              <Input
                 type="text"
                 id="username"
                 name="username"
-                className="mt-1 p-2 w-full border rounded-md text-black"
+                label="Username"
                 value={username}
                 onChange={handleChange}
 
               />
             </div>
             <div className="mb-6">
-              <label htmlFor="password" className="block text-sm font-medium">
-                Password:
-              </label>
-              <input
+
+              <Input
                 type="password"
                 id="password"
                 name="password"
-                className="mt-1 p-2 w-full border rounded-md text-black"
+                label="Password"
                 value={password}
                 onChange={handleChange}
 
              
               />
             </div>
-            <button
-              type="submit"
-              className="w-full bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300"
-            >
+            <Button type="submit" color="primary" variant="shadow" radius="sm" size="lg" isLoading={loading} fullWidth>
               Login
-            </button>
+            </Button>
           </form>
+          {/* Sign-up notice and link */}
+          <p className="mt-4">
+            Don't have an account? 
+            <Link className="ml-1 text-blue-500" href="/signup">
+              Sign Up
+            </Link>
+          </p>
           {/* Error notice */}
-          {!hideError && error && (
+          {error && (
               <p className="text-red-500 mt-4">
                   Error: {error}
               </p>
                 )}
         </div>
-        {/* Link to return to home page */}
-        <div className="fixed bottom-0 left-0 mb-4 ml-4">
-          <Link className="text-white underline" href="/">Home </Link>
-        </div>
+        {/* Link to return to home page */}  
+        <Link className="fixed bottom-0 left-0 mb-4 ml-4" color="foreground" href="/">Home</Link>
+        
       </div>
   );
 };

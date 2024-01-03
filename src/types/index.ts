@@ -22,7 +22,12 @@ export type IronSessionConfig = {
 }
 export type IronSessionWithOdoo = IronSession<{ odoo: OdooSession, set: (key:string, session: OdooSession )=>void }> 
 
-export type OdooSession = Odoo & { uid?:number, user?:UserOdoo, partner_id?:number, partner?:PartnerOdoo }
+export type OdooSession = Odoo & { 
+    apiKey?:string,
+    uid?:number, 
+    user?:UserOdoo, 
+    partner_id?:number, 
+    partner?:PartnerOdoo }
 
 export type NextApiRequestWithSession = NextApiRequest & {
     session: IronSessionWithOdoo
@@ -105,6 +110,8 @@ export interface LoyaltyCardOdoo {
   
   export interface UserOdoo {    
       id: number;
+      name: string;
+      email: string;
       complete_name: string;
       email_normalized: string;
       partner_id: [ number, string ];

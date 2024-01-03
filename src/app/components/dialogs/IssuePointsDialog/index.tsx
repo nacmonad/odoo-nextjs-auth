@@ -7,6 +7,8 @@ import StepOne from "./StepOne";
 import StepTwo from "./StepTwo";
 import StepFour from "./StepFour";
 import StepThree from "./StepThree";
+import { Button } from "@nextui-org/button"
+
 import { useMainContext } from "@/contexts/MainContextProvider";
 
 const TestPartner = {
@@ -99,10 +101,10 @@ const IssuePoints: FC = () => {
   async function handleFinishStepThree() {
     try {
       const partnerDataObj = JSON.parse(partnerData);
-      const { partner_id, points, expiration_date = null} = partnerDataObj;
+      const { partner_id, expiration_date = null} = partnerDataObj;
       const payload = {
         partner_id,
-        points,
+        points: amount,
         expiration_date: false,
         program_id : process.env.ODOO_LOYALTY_PROGRAM_ID || 2
       }
@@ -161,23 +163,23 @@ const IssuePoints: FC = () => {
             </button>
             }
             { formStep !== 4 &&
-             <button
+             <Button
               onClick={handleDismiss}
-              className="bg-white text-red-800 w-full px-4 py-2 mt-4 outline rounded-md"
+              color="danger" variant="bordered"
             >
               Dismiss
-            </button>}
+            </Button>}
             
         </div>
         </div>
       )}
 
-      <button
+      <Button
         onClick={handleIssuePoints}
-        className="bg-blue-500 text-white px-4 py-2 my-2 mx-1 rounded-md"
+        color="primary"
       >
         Issue Points
-      </button>
+      </Button>
     </>
   );
 };

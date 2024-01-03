@@ -6,7 +6,7 @@ import { getIronSession } from '../../../node_modules/iron-session/dist/index.cj
 import { IronSessionWithOdoo } from '@/types';
 
 import { PartnerOdoo, UserOdoo } from '@/types/index';
-import IssuePointsDialog from '@/app/components/dialogs/IssuePointsDialog/index';
+import IssuePointsDialog from '@/app/components/dialogs/IssuePointsDialog';
 import ReceivePointsDialog from '@/app/components/dialogs/ReceivePointsDialog';
 
 //import { ThemeProvider } from 'next-themes'

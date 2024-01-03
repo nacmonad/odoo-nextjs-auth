@@ -34,15 +34,17 @@ async function handler(req:NextApiRequestWithSession, res:NextApiResponse) {
      const partnerId = userData[0].partner_id[0];
      const partnerData = await odooAdmin.execute_kw('res.partner', 'read', [[partnerId], ['complete_name', 'email_normalized', 'is_blacklisted']]);
 
+
+    //console.log("[login]userdump", userDetails)
      const odooSession : OdooSession = {
         ...odoo,
         uid,
         partner_id: partnerId,
         user: userData[0],
-        partner: partnerData[0]
+        partner: partnerData[0],
      }
 
-     delete odoo.password;
+     //delete odooSession.password;
     
   if (odoo) {
     // Store Odoo client in session
@@ -50,14 +52,20 @@ async function handler(req:NextApiRequestWithSession, res:NextApiResponse) {
     req.session.set('odoo', odooSession); // Set the 'odoo' property in the session
     await req.session.save();
     // Send success response
-    res.redirect(302, `/dashboard`);
+    res.json({
+      odoo:odooSession
+    });
   } else {
     // Send authentication failure response
-    res.status(302).redirect(`/login?error=Authentication failed`);
+    res.json({
+      error: `Authentication failed.`
+    });
   }
   } catch(e : Error | any) {
     console.error(e)
-    res.status(302).redirect(`/login?error=${e.message}`)
+    res.json({
+      error:e.message
+    })
   }
 }
 

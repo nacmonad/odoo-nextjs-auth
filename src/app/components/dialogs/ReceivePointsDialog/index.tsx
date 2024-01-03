@@ -1,7 +1,8 @@
 'use client';
 import React, { useState, FC } from "react";
-import QRCodeReceive from "../generic/QRCodeReceive/QRCodeReceive";
+import QRCodeReceive from "../../generic/QRCodeReceive/QRCodeReceive";
 import { useMainContext } from "@/contexts/MainContextProvider";
+import {Button} from "@nextui-org/button";
 
 
 const IssuePoints: FC = () => {
@@ -29,23 +30,24 @@ const IssuePoints: FC = () => {
         <div className="bg-white p-4 rounded-md w-96 shadow-md">
             {/* Add your content here */}
             <QRCodeReceive/>
-            <button
+            <Button
               onClick={handleDismiss}
-              className="bg-blue-500 text-white px-4 py-2 mt-4 rounded-md"
+              color="danger"
+              variant="bordered"
             >
               Dismiss
-            </button>
+            </Button>
           
         </div>
       </div>
       )}
 
-      <button
+      <Button
         onClick={handleIssuePoints}
-        className="bg-blue-500 text-white px-4 py-2 my-2 mx-1 rounded-md"
+        color="primary"
       >
         Receive Points
-      </button>
+      </Button>
     </>
   );
 };
