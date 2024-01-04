@@ -24,10 +24,7 @@ export default async function UserDropdown() {
       }})
 
     const { user } = await userRes.json();
-    const { avatar_128, email, name } = user;
-
-    console.log("Fetched user avatar: ", avatar_128);
-    
+   
     return (
       <div className="flex items-center gap-4">
         <DropdownMenu user={user}/>

@@ -18,7 +18,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (!odoo) return res.status(500).send("OdooNotInitialized");
       if(odoo.uid != userId) return res.status(403).send("Forbidden");
 
-      console.log("[users]GET:", req.query)
+      console.log("[users]GET:", odoo)
 
       /* GET /api/users/[id] */
       if (req.method === "GET") {
@@ -26,7 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         // Retrieve details of the first user found (assuming unique IDs)
         const userDetails = await odoo.execute_kw('res.users', 'read', [[userId], fieldsArray]);
-        console.log("userDetails", userDetails)
+        //console.log("userDetails", userDetails)
         res.status(200).json({ user: userDetails[0] });
 
       } 

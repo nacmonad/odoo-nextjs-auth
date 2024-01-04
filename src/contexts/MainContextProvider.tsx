@@ -156,6 +156,7 @@ const contextValue: MainContextProps = {
   clearContext
 };
 console.log("[mainCtx]", {
+  odoo,
   user,
   partner
 })
