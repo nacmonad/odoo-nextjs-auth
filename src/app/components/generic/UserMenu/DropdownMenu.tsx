@@ -3,15 +3,22 @@ import { UserOdoo } from "@/types/index";
 import {Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Link, Avatar, User} from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { Router } from "../../../../../node_modules/next/router";
-
+import { MainContextProvider, useMainContext } from "@/contexts/MainContextProvider";
 interface DropdownMenuprops {
     user: UserOdoo
 }
 export default (props: DropdownMenuprops) => {
+    const mainCtx = useMainContext();
     const router = useRouter();
     const { user } = props;
     const { name, email, avatar_128 } = user;
 
+
+
+    function handleSignout() {
+      mainCtx.clearContext()
+      router.push(`/api/auth/signout`)
+    }
     return       <Dropdown placement="bottom-end">
     <DropdownTrigger>
       <User   
@@ -46,7 +53,7 @@ export default (props: DropdownMenuprops) => {
       <DropdownItem key="help_and_feedback">
         Help & Feedback
       </DropdownItem> */}
-      <DropdownItem key="logout" color="danger" onClick={()=> router.push(`/api/auth/signout`)}>
+      <DropdownItem key="logout" color="danger" onClick={handleSignOut}>
           Sign Out
       </DropdownItem>
     </DropdownMenu>
