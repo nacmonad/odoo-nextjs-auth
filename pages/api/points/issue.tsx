@@ -6,6 +6,7 @@ import { getIronSession } from '../../../node_modules/iron-session/dist/index.cj
 import { IronSessionWithOdoo } from '@/types';
 import sessionConfig from '@/utils/session';
 import isPromotions from '@/utils/isPromotions';
+import { OdooSession } from '@/types/index.js';
 
 interface IssuePointsPayload {
   partner_id: number;
@@ -27,8 +28,8 @@ export default async function handler(
   try {
     const session : IronSessionWithOdoo = await getIronSession(req,res, sessionConfig)
     if(!session) return res.status(403).json({ error:"NoSessionProvided"});
-    const { odoo } = session;
-    const { user, partner } = odoo;
+    const { odoo } : { odoo: OdooSession } = session;
+    const { user, partner } = odoo || {};
 
     if(!user || !partner) return res.status(403).json({ error: "NoUserProvided"})
     if(!isPromotions(user)) return res.status(403).json({ error: "UserNotPromotions"});

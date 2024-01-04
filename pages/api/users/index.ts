@@ -1,15 +1,15 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import Odoo from 'async-odoo-xmlrpc';
 import getOdooSession from '../../../src/utils/getOdooSession';
-
+import { OdooSession } from '@/types/index';
 let odoo : Odoo | null;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     try {
-
-        const { fields=[] } = req.query;
-
-        const odoo = await getOdooSession(req,res);
+      if(!req.query) throw Error("QueryNotProvided");
+      const { id, fields = [ ]} : { id?: string, fields?: string[] }= req.query;
+      
+        const odoo : OdooSession = await getOdooSession(req,res);
         if(!odoo) throw Error("InvalidOdooPermissions");
         
         if (req.method === "GET") {

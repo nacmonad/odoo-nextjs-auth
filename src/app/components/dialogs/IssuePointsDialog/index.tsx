@@ -34,7 +34,7 @@ const steps = [{
 {
   step: 4,
   status:"ISSUE_POINTS",
-  message: (amt:number, name: string) => `Issued ${amt} points to ${name}.`
+  message: (amt:string, name: string) => `Issued ${amt} points to ${name}.`
 
 },
 
@@ -49,7 +49,7 @@ const IssuePoints: FC = () => {
 
   const [showDialog, setShowDialog] = useState<boolean>(false);
   const [formStep, setFormStep] = useState<number>(1);
-  const [amount, setAmount] = useState<number>(100);
+  const [amount, setAmount] = useState<string>("100");
   const [partnerData, setPartnerData] = useState('No result');
   const [pointIssued, setPointIssued] = useState<null | LoyaltyCardOdoo >(null);
 
@@ -104,7 +104,7 @@ const IssuePoints: FC = () => {
       const { partner_id, expiration_date = null} = partnerDataObj;
       const payload = {
         partner_id,
-        points: amount,
+        points: parseInt(amount),
         expiration_date: false,
         program_id : process.env.ODOO_LOYALTY_PROGRAM_ID || 2
       }

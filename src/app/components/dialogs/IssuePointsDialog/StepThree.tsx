@@ -1,5 +1,5 @@
 
-export default ( { partnerData, amount, handleFinish, loading = false, error } : { partnerData: string, amount: number, handleFinish: ()=>void, loading:boolean, error?: string | null }) => {
+export default ( { partnerData, amount, handleFinish, loading = false, error } : { partnerData: string, amount: string, handleFinish: ()=>void, loading:boolean, error?: string | null }) => {
         
         const { complete_name, email_normalized } = JSON.parse(partnerData);
         return <div className="w-full h-full text-black">

@@ -38,9 +38,15 @@ interface MainContextProviderProps {
 
 export const MainContextProvider: React.FC<MainContextProviderProps> = ({ children }) => {
   const session : IronSessionWithOdoo = useIronSession();
+  const { odoo } = session;
   
-  const { odoo = { user:null, partner:null} } = session ||  { odoo: { user:null, partner:null} };
-  const { user, partner } = odoo;
+  let user : UserOdoo | undefined;;
+  let partner : PartnerOdoo | undefined;
+  if(odoo?.user && odoo?.partner) {
+    user = odoo.user;
+    partner = odoo.partner;
+  } 
+  
   
   const [location, setLocation] = useState<null|Location>(null);
   const [qrCode, setQrCode] = useState<string|null>(null)

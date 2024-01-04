@@ -3,13 +3,15 @@ import { getIronSession } from "../../node_modules/iron-session/dist/index.cjs";
 import { NextApiRequest, NextApiResponse } from "../../node_modules/next/dist/shared/lib/utils";
 import { IronSessionWithOdoo } from "@/types";
 import sessionConfig from "./session";
+import { OdooSession } from "@/types/index";
 
 export default async function(req:NextApiRequest,res: NextApiResponse) {
     try {
         const session : IronSessionWithOdoo = await getIronSession(req,res, sessionConfig)
         if(!session) return null;
 
-        const { odoo:odooCredentials } = session;
+        const { odoo: odooCredentials } = session;
+        if(!odooCredentials) return null;
         const { username, password } = odooCredentials;
         const odoo : Odoo & { uid?:number , partner_id?:number}= new Odoo({
             username, 

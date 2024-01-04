@@ -1,11 +1,14 @@
 import { cookies } from "next/headers";
 import { Link } from "@nextui-org/link"
-import { getIronSession } from "../../../../../node_modules/iron-session/dist/index.cjs";
+import { getIronSession } from "iron-session";
 import sessionConfig from "@/utils/session";
 
 import DropdownMenu from "./DropdownMenu";
+//import { IronSessionWithOdoo, OdooSession, UserOdoo } from "@/types/index.js";
+//import { ResponseCookies } from "next/dist/server/web/spec-extension/cookies.js";
 
 export default async function UserDropdown() {
+  
     const sessionCookies = cookies();
     const session = await getIronSession(sessionCookies, sessionConfig);
     const { odoo } = session;

@@ -1,15 +1,19 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import Odoo from 'async-odoo-xmlrpc';
 import getOdooSession from '@/utils/getOdooSession';
+import { OdooSession } from '@/types/index';
 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     try {
-      const userId = parseInt(req.query.id);
-      const { fields = [ ]} = req.query;
+      if(!req.query) throw Error("QueryNotProvided");
+      const { id, fields = [ ]} : { id?: string, fields?: string[] }= req.query;
+
+      if(!id) throw Error("NoIdProvided");
+      const userId = parseInt(id);
 
 
-      let odoo : Odoo | null = await getOdooSession(req, res);
+      let odoo : OdooSession = await getOdooSession(req, res);
 
       if (!odoo) return res.status(500).send("OdooNotInitialized");
       if(odoo.uid != userId) return res.status(403).send("Forbidden");
