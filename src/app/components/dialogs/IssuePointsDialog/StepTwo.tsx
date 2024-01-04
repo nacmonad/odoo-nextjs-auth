@@ -29,7 +29,7 @@ export default ( { partnerData, amount, setAmount, handleFinish, loading = false
             />
             <Button
               onClick={handleFinish}
-              className="bg-blue-500 text-white w-full px-4 py-2 mt-4 outline rounded-md"
+              className="bg-blue-500 text-white w-full px-4 py-2 my-4 outline rounded-md"
             >
               Issue Points to {email_normalized}
             </Button>

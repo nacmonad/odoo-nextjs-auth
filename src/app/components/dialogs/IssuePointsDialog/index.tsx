@@ -164,6 +164,7 @@ const IssuePoints: FC = () => {
             }
             { formStep !== 4 &&
              <Button
+              className="mt-4"
               onClick={handleDismiss}
               color="danger" variant="bordered"
             >
