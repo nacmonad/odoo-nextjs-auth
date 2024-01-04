@@ -1,4 +1,4 @@
-import QRScanner from "../../QRScanner";
+import QRScanner from "../../generic/QRScanner";
 
 export default ( { handleFinish } : { handleFinish: (result: {
         data?: string | undefined;

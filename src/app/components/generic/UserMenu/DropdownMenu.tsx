@@ -34,7 +34,7 @@ export default (props: DropdownMenuprops) => {
         <p className="font-semibold">Signed in as</p>
         <p className="font-semibold">{email}</p>
       </DropdownItem>
-      <DropdownItem key="settings">
+      <DropdownItem key="settings" onClick={()=>router.push(`/settings`)}>
         My Settings
       </DropdownItem>
       {/* <DropdownItem key="team_settings">Team Settings</DropdownItem>

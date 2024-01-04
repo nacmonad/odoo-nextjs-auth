@@ -175,6 +175,7 @@ const IssuePoints: FC = () => {
       )}
 
       <Button
+        className="mr-2 mt-4"
         onClick={handleIssuePoints}
         color="primary"
       >

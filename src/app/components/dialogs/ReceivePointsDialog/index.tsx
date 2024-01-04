@@ -43,6 +43,7 @@ const IssuePoints: FC = () => {
       )}
 
       <Button
+        className="ml-2 mt-4"
         onClick={handleIssuePoints}
         color="primary"
       >
