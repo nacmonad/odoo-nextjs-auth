@@ -1,6 +1,6 @@
 import React, { FC, } from 'react';
 import { QrReader } from 'react-qr-reader';
-import { OnResultFunction } from '../../../node_modules/react-qr-reader/dist/index';
+import { OnResultFunction } from '../../../../node_modules/react-qr-reader/dist/index';
 
 const QRScanner: FC<{ handleFinish: (result: { data?:string, error?:Error })=>void }> = ( { handleFinish }: { handleFinish: (result: { data?:string, error?:Error })=>void }) => {
   const handleResult : OnResultFunction = (result, error) => {
@@ -22,7 +22,7 @@ const QRScanner: FC<{ handleFinish: (result: { data?:string, error?:Error })=>vo
 
   return (
     <>
-        <QrReader onResult={handleResult} constraints={{}} />
+        <QrReader onResult={handleResult} constraints={{facingMode:"environment"}} />
         
     </>
   );

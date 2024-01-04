@@ -53,7 +53,10 @@ export const MainContextProvider: React.FC<MainContextProviderProps> = ({ childr
     qrCode,
     subscription,
   };
-  console.log("[mainCtx]", process.env.NEXT_PUBLIC_PUSH_HOST)
+  console.log("[mainCtx]", {
+    user,
+    partner
+  })
   function initRssFeeds() {
     if ('Notification' in window) {
         Notification.requestPermission().then(permission => {
@@ -109,6 +112,7 @@ export const MainContextProvider: React.FC<MainContextProviderProps> = ({ childr
           .catch(console.error)
         }
    }
+
   /* RSS PUSH NOTIFICATIONS SUBSCRIBER */
   useEffect(( )=>{
     // In your React component or main application file
