@@ -14,7 +14,8 @@ interface MainContextProps {
   partner: PartnerOdoo | null | undefined;
   qrCode: string | null ;
   subscription: PushSubscription | null;
-  location : Location | null 
+  location : Location | null,
+  clearContext: () => void
 }
 
 // Create the context
@@ -29,40 +30,36 @@ export const useMainContext = () => {
   return context;
 };
 
+
 // Create the context provider component
 interface MainContextProviderProps {
   children: ReactNode;
 }
 
-
-
 export const MainContextProvider: React.FC<MainContextProviderProps> = ({ children }) => {
   const session : IronSessionWithOdoo = useIronSession();
   const { odoo } = session;
-  
-  let user : UserOdoo | undefined;;
-  let partner : PartnerOdoo | undefined;
+
+  let sessionUser, sessionPartner;
   if(odoo?.user && odoo?.partner) {
-    user = odoo.user;
-    partner = odoo.partner;
+    sessionUser = odoo.user;
+    sessionPartner = odoo.partner;
   } 
   
-  
+  const [user, setUser] = useState<UserOdoo | null | undefined>(sessionUser);
+  const [partner, setParner] = useState<PartnerOdoo | null | undefined>(sessionPartner);
   const [location, setLocation] = useState<null|Location>(null);
   const [qrCode, setQrCode] = useState<string|null>(null)
   const [subscription, setSubscription] = useState<PushSubscription | null>(null);
   
-  const contextValue: MainContextProps = {
-    user,
-    partner,
-    location,
-    qrCode,
-    subscription,
-  };
-  console.log("[mainCtx]", {
-    user,
-    partner
-  })
+  function clearContext() {
+    setUser(null);
+    setParner(null)
+    setLocation(null);
+    setQrCode(null);
+    setSubscription(null);
+    
+  }
   function initRssFeeds() {
     if ('Notification' in window) {
         Notification.requestPermission().then(permission => {
@@ -106,7 +103,6 @@ export const MainContextProvider: React.FC<MainContextProviderProps> = ({ childr
         });
     }
    }
-
    function initQrReceiveCode() {
         if(partner) {
           QRCode.toDataURL(JSON.stringify({
@@ -118,6 +114,8 @@ export const MainContextProvider: React.FC<MainContextProviderProps> = ({ childr
           .catch(console.error)
         }
    }
+
+
 
   /* RSS PUSH NOTIFICATIONS SUBSCRIBER */
   useEffect(( )=>{
@@ -148,6 +146,19 @@ export const MainContextProvider: React.FC<MainContextProviderProps> = ({ childr
     }
 }, [])
 
+
+const contextValue: MainContextProps = {
+  user,
+  partner,
+  location,
+  qrCode,
+  subscription,
+  clearContext
+};
+console.log("[mainCtx]", {
+  user,
+  partner
+})
 
 
   return <MainContext.Provider value={contextValue}>{children}</MainContext.Provider>;
