@@ -115,8 +115,9 @@ const IssuePoints: FC = () => {
         body: JSON.stringify(payload)
       });
       const p = await r.json();
+      console.log("[pointIssued]", p)
       if(p.error) throw Error(p.error);
-      setPointIssued(p.data[0]);
+      setPointIssued(p);
       setFormStep(4);
       setLoading(false);
       setError(null);
