@@ -15,7 +15,7 @@ export default (props: DropdownMenuprops) => {
 
 
 
-    function handleSignout() {
+    function handleSignOut() {
       mainCtx.clearContext()
       router.push(`/api/auth/signout`)
     }
