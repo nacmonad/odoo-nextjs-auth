@@ -50,6 +50,7 @@ async function handler(req:NextApiRequestWithSession, res:NextApiResponse) {
     // Store Odoo client in session
     //delete odoo.password;
     req.session.set('odoo', odooSession); // Set the 'odoo' property in the session
+    req.session.odoo = odooSession;
     await req.session.save();
     // Send success response
     res.json({
