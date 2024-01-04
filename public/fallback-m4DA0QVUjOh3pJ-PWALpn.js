@@ -1,0 +1,1 @@
+(()=>{"use strict";self.fallback=async e=>{switch(e.destination){case"document":0;case"image":return caches.match("/fallback.png",{ignoreSearch:!0});default:return Response.error()}}})();

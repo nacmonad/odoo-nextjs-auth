@@ -22,12 +22,65 @@ export type IronSessionConfig = {
 }
 export type IronSessionWithOdoo = IronSession<{ odoo: OdooSession, set: (key:string, session: OdooSession )=>void }> 
 
+
+export interface PartnerOdoo {
+  id: number;
+  complete_name: string;
+  is_seo_optimized: boolean;
+  website_meta_title: string | false;
+  website_meta_description: string | false;
+  website_meta_keywords: string | false;
+  website_meta_og_img: string | false;
+  seo_name: string | false;
+  website_id: string | false;
+  website_published: boolean | false;
+  is_published: boolean | false;
+  can_publish: boolean;
+  website_url: string;
+  message_is_follower: boolean;
+  message_follower_ids: number[];
+  message_partner_ids: number[];
+  message_ids: number[];
+  has_message: boolean;
+  message_needaction: boolean;
+  message_needaction_counter: number;
+  message_has_error: boolean;
+  message_has_error_counter: number;
+  message_attachment_count: number;
+  rating_ids: number[];
+  website_message_ids: number[];
+  message_has_sms_error: boolean;
+  email_normalized: string;
+  is_blacklisted: boolean;
+  message_bounce: number;
+  // ... (continue with other properties)
+  static_map_url: string | false;
+  static_map_url_is_valid: boolean;
+  website_description: string | false;
+  website_short_description: string | false;
+}
+
+export interface UserOdoo {    
+    id: number;
+    name?: string;
+    email?: string;
+    complete_name?: string;
+    email_normalized?: string;
+    partner_id?: [ number, string ];
+    lang?: string;
+    tz?: string;
+    groups_id?: number[];
+    avatar_128?: string;
+}
+
 export type OdooSession = Odoo & { 
+    username?:string 
+    password?:string
     apiKey?:string,
     uid?:number, 
     user?:UserOdoo, 
     partner_id?:number, 
-    partner?:PartnerOdoo }
+    partner?:PartnerOdoo } | null
 
 export type NextApiRequestWithSession = NextApiRequest & {
     session: IronSessionWithOdoo
@@ -71,52 +124,4 @@ export interface LoyaltyCardOdoo {
     order_id: boolean | any
   }
 
-  export interface PartnerOdoo {
-    id: number;
-    complete_name: string;
-    is_seo_optimized: boolean;
-    website_meta_title: string | false;
-    website_meta_description: string | false;
-    website_meta_keywords: string | false;
-    website_meta_og_img: string | false;
-    seo_name: string | false;
-    website_id: string | false;
-    website_published: boolean | false;
-    is_published: boolean | false;
-    can_publish: boolean;
-    website_url: string;
-    message_is_follower: boolean;
-    message_follower_ids: number[];
-    message_partner_ids: number[];
-    message_ids: number[];
-    has_message: boolean;
-    message_needaction: boolean;
-    message_needaction_counter: number;
-    message_has_error: boolean;
-    message_has_error_counter: number;
-    message_attachment_count: number;
-    rating_ids: number[];
-    website_message_ids: number[];
-    message_has_sms_error: boolean;
-    email_normalized: string;
-    is_blacklisted: boolean;
-    message_bounce: number;
-    // ... (continue with other properties)
-    static_map_url: string | false;
-    static_map_url_is_valid: boolean;
-    website_description: string | false;
-    website_short_description: string | false;
-  }
   
-  export interface UserOdoo {    
-      id: number;
-      name: string;
-      email: string;
-      complete_name: string;
-      email_normalized: string;
-      partner_id: [ number, string ];
-      lang: string;
-      tz: string;
-      groups_id: number[];
-      avatar_128: string;
-  }

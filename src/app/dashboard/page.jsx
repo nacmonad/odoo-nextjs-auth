@@ -3,9 +3,6 @@
 import { cookies } from 'next/headers';
 import sessionConfig from '@/utils/session';
 import { getIronSession } from '../../../node_modules/iron-session/dist/index.cjs';
-import { IronSessionWithOdoo } from '@/types';
-
-import { PartnerOdoo, UserOdoo } from '@/types/index';
 import IssuePointsDialog from '@/app/components/dialogs/IssuePointsDialog';
 import ReceivePointsDialog from '@/app/components/dialogs/ReceivePointsDialog';
 
