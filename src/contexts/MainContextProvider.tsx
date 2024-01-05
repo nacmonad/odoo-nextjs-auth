@@ -61,54 +61,69 @@ export const MainContextProvider: React.FC<MainContextProviderProps> = ({ childr
     
   }
   function initRssFeeds() {
-    if ('Notification' in window) {
-        Notification.requestPermission().then(permission => {
-        if (permission === 'granted') {
-            console.log('Notification permission granted!', navigator.serviceWorker);
-            // Now, you can obtain a push subscription.
+    console.log("initRssFeeds", window)
+    if("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/sw.js").then(
+        function (registration) {
+          console.log("Service Worker registration successful with scope: ", registration.scope);
 
-            // Subscribe to the push events
-            
-            navigator.serviceWorker
-                .register('/sw.js')
-                .then(registration => {
-                console.log("Service Worker Registered", registration)
-                registration.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: process.env.NEXT_PUBLIC_APPLICATION_SERVER_KEY })
-                  .then(subscription => {
-                    // Send the subscription details to your server
-                    console.log("pushManager", subscription);
-                    if(partner) {
-                      const headers = new Headers();
-                      headers.append('Content-Type', 'application/json');
-                      headers.append('x-odoo-partner-id', String(partner.id));
 
-                    fetch(`${process.env.NEXT_PUBLIC_PUSH_HOST}/api/subscribe`, {
-                      method:"POST",
-                      headers,
-                      body: JSON.stringify(subscription)
-                    })
-                    .then(res=> res.json())
-                    .then(sub=> {
-                      console.log("Subscribed!", sub);
-                      if(sub.subscription) {
-                        const subCopy = { ...sub.subscription };
-                        //don't need to expose private info but its' there
-                        delete subCopy.keys;
-                        setSubscription(subCopy);
+
+          if ('Notification' in window) {
+            Notification.requestPermission().then(permission => {
+            if (permission === 'granted') {
+                console.log('Notification permission granted!', navigator.serviceWorker);
+                // Now, you can obtain a push subscription.
+    
+                // Subscribe to the push events
+                navigator.serviceWorker.ready.then(registration => {
+                    console.log("Service Worker Registered", registration)
+                    registration.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: process.env.NEXT_PUBLIC_APPLICATION_SERVER_KEY })
+                      .then(subscription => {
+                        // Send the subscription details to your server
+                        console.log("pushManager", subscription);
+                        if(partner) {
+                          const headers = new Headers();
+                          headers.append('Content-Type', 'application/json');
+                          headers.append('x-odoo-partner-id', String(partner.id));
+    
+                        fetch(`${process.env.NEXT_PUBLIC_PUSH_HOST}/api/subscribe`, {
+                          method:"POST",
+                          headers,
+                          body: JSON.stringify(subscription)
+                        })
+                        .then(res=> res.json())
+                        .then(sub=> {
+                          console.log("Subscribed!", sub);
+                          if(sub.subscription) {
+                            const subCopy = { ...sub.subscription };
+                            //don't need to expose private info but its' there
+                            delete subCopy.keys;
+                            setSubscription(subCopy);
+                          }
+                        }).catch((err : Error | null | undefined) => console.error(err))
                       }
-                    }).catch((err : Error | null | undefined) => console.error(err))
-                  }
-                    
-                  })
-                  .catch(error => {
-                    console.error('Error subscribing to push notifications:', error);
+                        
+                      })
+                      .catch(error => {
+                        console.error('Error subscribing to push notifications:', error);
+                      });
                   });
-              });
-
-
+    
+    
+            }
+          });
         }
-      });
+
+          
+        },
+        function (err) {
+          console.log("Service Worker registration failed: ", err);
+        }
+      );
     }
+    
+    
    }
    function initQrReceiveCode() {
         if(partner) {
@@ -122,8 +137,7 @@ export const MainContextProvider: React.FC<MainContextProviderProps> = ({ childr
         }
    }
 
-
-
+  
   /* RSS PUSH NOTIFICATIONS SUBSCRIBER */
   useEffect(( )=>{
     // In your React component or main application file

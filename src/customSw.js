@@ -1,6 +1,13 @@
+//public/sw.js
+
 import {precacheAndRoute} from 'workbox-precaching';
 
 precacheAndRoute(self.__WB_MANIFEST);
+
+
+self.addEventListener("install", function (event) {
+  console.log("Hello world from the Service Worker 🤙");
+});
 
 self.addEventListener('push', event => {
     const options = {
