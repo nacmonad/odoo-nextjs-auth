@@ -73,27 +73,27 @@ export const MainContextProvider: React.FC<MainContextProviderProps> = ({ childr
                 registration.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: process.env.NEXT_PUBLIC_APPLICATION_SERVER_KEY })
                   .then(subscription => {
                     // Send the subscription details to your server
+                    console.log("pushManager", subscription);
                     if(partner) {
                       const headers = new Headers();
                       headers.append('Content-Type', 'application/json');
                       headers.append('x-odoo-partner-id', String(partner.id));
 
-                      fetch(`${process.env.NEXT_PUBLIC_PUSH_HOST}/api/subscribe`, {
-                        method: "POST",
-                        headers,
-                        body: JSON.stringify(subscription)
-                      })
-                        .then(res => res.json())
-                        .then(sub => {
-                          console.log("Subscribed!", sub);
-                          if (sub.subscription) {
-                            const subCopy = { ...sub.subscription };
-                            // Don't need to expose private info but it's there
-                            delete subCopy.keys;
-                            setSubscription(subCopy);
-                          }
-                        })
-                        .catch((err) => console.error('Error during subscription request:', err));
+                    fetch(`${process.env.NEXT_PUBLIC_PUSH_HOST}/api/subscribe`, {
+                      method:"POST",
+                      headers,
+                      body: JSON.stringify(subscription)
+                    })
+                    .then(res=> res.json())
+                    .then(sub=> {
+                      console.log("Subscribed!", sub);
+                      if(sub.subscription) {
+                        const subCopy = { ...sub.subscription };
+                        //don't need to expose private info but its' there
+                        delete subCopy.keys;
+                        setSubscription(subCopy);
+                      }
+                    }).catch((err : Error | null | undefined) => console.error(err))
                   }
                     
                   })
