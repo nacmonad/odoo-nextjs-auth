@@ -68,7 +68,10 @@ export const MainContextProvider: React.FC<MainContextProviderProps> = ({ childr
             // Now, you can obtain a push subscription.
 
             // Subscribe to the push events
-            navigator.serviceWorker.ready.then(registration => {
+            
+            navigator.serviceWorker
+                .register('/sw.js')
+                .then(registration => {
                 console.log("Service Worker Registered", registration)
                 registration.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: process.env.NEXT_PUBLIC_APPLICATION_SERVER_KEY })
                   .then(subscription => {
