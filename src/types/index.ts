@@ -125,3 +125,10 @@ export interface LoyaltyCardOdoo {
   }
 
   
+  export interface ChoiceResult {
+    outcome: string
+  }
+  export interface InstallPromptEvent extends Event {
+    userChoice: Promise<ChoiceResult>;
+    prompt: ()=>void;  
+  }

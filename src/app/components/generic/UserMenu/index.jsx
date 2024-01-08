@@ -1,33 +1,32 @@
-import { cookies } from "next/headers";
-import { Link } from "@nextui-org/link"
-import { getIronSession } from "iron-session";
-import sessionConfig from "@/utils/session";
 
+'use client';
+
+import { useMainContext } from "@/contexts/MainContextProvider";
+import { useEffect, useState } from "react";
 import DropdownMenu from "./DropdownMenu";
 //import { IronSessionWithOdoo, OdooSession, UserOdoo } from "@/types/index.js";
 //import { ResponseCookies } from "next/dist/server/web/spec-extension/cookies.js";
 
-export default async function UserDropdown() {
-  
-    const sessionCookies = cookies();
-    const session = await getIronSession(sessionCookies, sessionConfig);
-    const { odoo } = session;
-    const { uid } = odoo;
+export default function UserDropdown() {
+    const [userDetails, setUserDetails] = useState({});
+    const mainCtx = useMainContext();
+    const { user, session } = mainCtx;
     
-    console.log("[UserDropdown]session", session)
+    async function fetchUserDetails() {
+      const uid  = user.id;
+      const userRes = await fetch(`/api/users/${uid}?fields=["name", "email", "avatar_128"]`);
+      const { user : userDeetz } = await userRes.json();
+      setUserDetails(userDeetz);
+    }
+    
+    useEffect(()=>{
+      if(user) fetchUserDetails();
+      },[user])
+    console.log("[UserDropdown]session", { user, session })
 
-    const userRes = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/users/${uid}?fields=["name", "email", "avatar_128"]`, {
-      method:"GET",
-      headers: {
-        'Content-Type': 'application/json',
-        'Cookie': sessionCookies || ''
-      }})
-
-    const { user } = await userRes.json();
-   
     return (
       <div className="flex items-center gap-4">
-        <DropdownMenu user={user}/>
+        <DropdownMenu user={userDetails}/>
     </div>
     );
   }

@@ -1,0 +1,51 @@
+'use client';
+import { Button } from '@nextui-org/button';
+import { useEffect, useState } from 'react';
+import {ChoiceResult, InstallPromptEvent} from '@/types';
+  
+export default () => {
+    const [deferredInstallPrompt, setDeferredInstallPrompt] = useState<InstallPromptEvent | null>(null);
+    const handleInstallButtonClick = (e:Event) => {
+        // Check if the deferredPrompt is available
+        if (deferredInstallPrompt) {
+          // Show the browser's install prompt
+          deferredInstallPrompt.prompt();
+    
+          // Wait for the user to respond to the prompt
+          deferredInstallPrompt.userChoice.then((choiceResult: ChoiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+              console.log('User accepted the install prompt');
+            } else {
+              console.log('User dismissed the install prompt');
+            }
+    
+            // Clear the deferredInstallPrompt after the user has responded
+            setDeferredInstallPrompt(null);
+          });
+        }
+      };
+
+/* Install Prompt handler */
+useEffect(() => {
+
+    const handleBeforeInstallPrompt = (event : InstallPromptEvent) => {
+      // Prevent the default behavior to avoid showing the browser's install prompt
+      event.preventDefault();
+
+      // Store the event for later use
+      setDeferredInstallPrompt(event)
+      console.log("[beforeinstallprompt]set", event);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    console.log("[beforeinstallprompt]")
+    return () => {
+      // Remove the event listener when the component is unmounted
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    };
+  }, []);
+
+  if(!deferredInstallPrompt) return null;
+  return <Button size="lg" color="primary" onClick={handleInstallButtonClick}>Install PWA</Button>
+
+}

@@ -33,7 +33,8 @@
     "react-icons": "^4.12.0",
     "react-qr-reader": "^3.0.0-beta-1",
     "redis": "^4.6.11",
-    "web-push": "^3.6.6"
+    "web-push": "^3.6.6",
+    "winston": "^3.11.0"
   },
   "devDependencies": {
     "@types/node": "^20",

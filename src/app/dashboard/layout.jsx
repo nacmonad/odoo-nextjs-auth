@@ -10,6 +10,7 @@ import { getIronSession } from 'iron-session';
 import sessionConfig from '@/utils/session';
 import { IronSessionProvider } from '@/contexts/IronSessionProvider';
 import { MainContextProvider } from '@/contexts/MainContextProvider';
+import UserMenu from '@/app/components/generic/UserMenu';
 import ThemeProvider from '@/contexts/ThemeProvider';
 
 const inter = Inter({ subsets: ['latin'] })

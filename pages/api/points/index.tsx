@@ -5,6 +5,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { getIronSession } from '../../../node_modules/iron-session/dist/index.cjs';
 import { IronSessionWithOdoo, LoyaltyCardOdoo } from '@/types';
 import initAdminOdoo from '@/utils/odooAdminClient';
+import { encrypt } from '@/utils/crypto';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
    //session info
@@ -26,11 +27,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     ]);
     const n = new Date();
     const points = result
-        .filter(p=>!p.expiration_date || (p.expiration_date && n < new Date(p.expiration_date)))
-        .reduce((a,b)=>a+b.points, 0)
+        .map(p=>({
+          ...p,
+          display_name: p.display_name.replace(/Sago Rewards: (.{9})/, 'xxxx-xxxx'),//replace(/^.{8}/, 'xxxx-xxxx'),
+          code: encrypt(p.code)
+        }))
+        .filter(p=>!p.expiration_date || (p.expiration_date && n < new Date(p.expiration_date)));
+        
     // // Extract and send the loyalty points in the response
     // const loyaltyPoints = result.length > 0 ? result[0].points || 0 : 0;
-     res.status(200).json({ points });
+     res.status(200).json({ points, total: points.reduce((a,b)=>a+b.points, 0) });
   } catch (error) {
     console.error('Error fetching loyalty points:', error);
     res.status(500).json({ error: 'Internal Server Error' });
