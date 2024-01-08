@@ -2,21 +2,31 @@
 'use client';
 
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { UserOdoo, PartnerOdoo, IronSessionWithOdoo } from '@/types/index';// Define the shape of your context
+import { UserOdoo, PartnerOdoo, IronSessionWithOdoo, LoyaltyCardOdoo } from '@/types/index';// Define the shape of your context
 
 import { useIronSession } from './IronSessionProvider';
 import { PushSubscription } from 'web-push';
 import { Location } from '@/types/index';
 import QRCode from 'qrcode';
+import logger from '@/logger';
+
 
 interface MainContextProps {
   user: UserOdoo | null | undefined;
   partner: PartnerOdoo | null | undefined;
   qrCode: string | null ;
+  initQrReceiveCode: (code: string) => void;
   subscription: PushSubscription | null;
-  location : Location | null,
-  clearContext: () => void
+  location : Location | null;
+  loyaltyCards : LoyaltyCardOdoo[] | [];
+  initLoyaltyCard : () => Promise<LoyaltyCardOdoo>;
+  setLoyaltyCards : React.Dispatch<React.SetStateAction<LoyaltyCardOdoo[] | []>>;
+  clearContext: () => void;
 }
+
+
+
+
 
 // Create the context
 const MainContext = createContext<MainContextProps | undefined>(undefined);
@@ -46,10 +56,12 @@ export const MainContextProvider: React.FC<MainContextProviderProps> = ({ childr
     sessionPartner = odoo.partner;
   } 
   
+  
   const [user, setUser] = useState<UserOdoo | null | undefined>(sessionUser);
   const [partner, setParner] = useState<PartnerOdoo | null | undefined>(sessionPartner);
   const [location, setLocation] = useState<null|Location>(null);
-  const [qrCode, setQrCode] = useState<string|null>(null)
+  const [qrCode, setQrCode] = useState<string|null>(null);
+  const [loyaltyCards, setLoyaltyCards] = useState<LoyaltyCardOdoo[] | []>([])
   const [subscription, setSubscription] = useState<PushSubscription | null>(null);
   
   function clearContext() {
@@ -118,52 +130,96 @@ export const MainContextProvider: React.FC<MainContextProviderProps> = ({ childr
           
         },
         function (err) {
-          console.log("Service Worker registration failed: ", err);
+          console.error("Service Worker registration failed: ", err);
         }
       );
     }
     
     
    }
-   function initQrReceiveCode() {
+
+   async function initLoyaltyCard(){
+      try {
+        const partner_id = partner?.id;
+        if(!partner_id) throw Error("NoPartnerId");
+
+        const r = await fetch(`/api/points/issue`, {
+          method:"POST",
+          body: JSON.stringify({
+            partner_id,
+            points: 0,
+            expiration_date: false,
+            program_id : parseInt(process.env.NEXT_PUBLIC_ODOO_LOYALTY_PROGRAM_ID || '2')
+          })
+        });
+        const p = await r.json();
+        console.log("[initLoyaltyCard]", p)
+        setLoyaltyCards([...loyaltyCards, p]);
+        if(p.error) throw Error(p.error);
+        return p.data;
+      } catch(e) {
+        console.error(e);
+      }
+   }
+
+   function initQrReceiveCode(code:string) {
         if(partner) {
+          console.log("[initQrReceiveCode]", {
+            partner_id: partner.id,
+            complete_name: partner.complete_name,
+            email_normalized: partner.email_normalized,
+            code,
+
+        })
           QRCode.toDataURL(JSON.stringify({
               partner_id: partner.id,
               complete_name: partner.complete_name,
-              email_normalized: partner.email_normalized
+              email_normalized: partner.email_normalized,
+              code,
 
           })).then((url:string)=>setQrCode(url))
           .catch(console.error)
         }
    }
 
+   function handleLocationChange(position:GeolocationPosition) {
+    console.log("[handleLocationChange]", position);
+      setLocation({
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+      });
   
+   }
   /* RSS PUSH NOTIFICATIONS SUBSCRIBER */
   useEffect(( )=>{
     // In your React component or main application file
     if(session) {
       initRssFeeds();
-      initQrReceiveCode();
+      //initQrReceiveCode();
     }
     
+    let watchId : number | undefined;
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setLocation({
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-          });
-        },
+        handleLocationChange,
         (error) => {
           console.error('Error getting location:', error.message);
         }
       );
+      watchId = navigator.geolocation.watchPosition(
+        handleLocationChange,
+        (error) => {
+          console.error('Error getting location:', error.message);
+        }
+      );
+
     } else {
       console.error('Geolocation is not supported by this browser.');
     }
     
     return ()=>{
 
+      if(watchId) navigator?.geolocation?.clearWatch(watchId);
     }
 }, [])
 
@@ -171,10 +227,14 @@ export const MainContextProvider: React.FC<MainContextProviderProps> = ({ childr
 const contextValue: MainContextProps = {
   user,
   partner,
+  initLoyaltyCard,
+  loyaltyCards,
+  setLoyaltyCards,
   location,
+  initQrReceiveCode,
   qrCode,
   subscription,
-  clearContext
+  clearContext,
 };
 console.log("[mainCtx]", {
   odoo,

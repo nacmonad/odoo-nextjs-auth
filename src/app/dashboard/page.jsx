@@ -19,7 +19,6 @@ const DashboardPage = async ( ) => {
     const { odoo } = session;
     const { host, port, db, username, secure, uid, partner_id, user, partner } = odoo;
     
-    console.log("[DashboardPage]getPoints", odoo)
     const points_res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/points`, {
         method:'GET',
         headers:{
@@ -27,7 +26,9 @@ const DashboardPage = async ( ) => {
             'Cookie': sessionCookies || '',
           }
     });
-    const { points } = await points_res.json()
+    const { points, total } = await points_res.json()
+    console.log("[DashboardPage]getPoints", {odoo, points, total })
+
   
     // Extract necessary data from the session object
 
@@ -46,7 +47,7 @@ const DashboardPage = async ( ) => {
                       <p>Welcome, {odoo.username}!</p>
                       <p>Email: {odoo.email}</p>
                       <p>Role: {odoo.role}</p>
-                      <p>Points: {points > -1 ? points : -1}</p>
+                      <p>Points: {total}</p>
                       {/* Add other user details as needed */}
                       </>
                   ) : (
@@ -58,7 +59,7 @@ const DashboardPage = async ( ) => {
                       </div>
                   )}
                     {isPromotions(user) && <IssuePointsDialog/>}
-                    <ReceivePointsDialog/>
+                    <ReceivePointsDialog initialCards={points}/>
                 
             </div>
           </div>

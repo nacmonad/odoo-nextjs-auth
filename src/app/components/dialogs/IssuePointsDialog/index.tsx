@@ -7,14 +7,10 @@ import StepOne from "./StepOne";
 import StepTwo from "./StepTwo";
 import StepFour from "./StepFour";
 import StepThree from "./StepThree";
-import { Button } from "@nextui-org/button"
+import { Button, Card, CardAction, CardBody } from "@nextui-org/react"
 
 import { useMainContext } from "@/contexts/MainContextProvider";
 
-const TestPartner = {
-  id: 3,
-  is_blacklisted: false
-}
 
 const steps = [{
   step: 1,
@@ -42,7 +38,7 @@ const steps = [{
 
 const IssuePoints: FC = () => {
   const mainCtx = useMainContext();
-  const { user, partner } = mainCtx;
+  const { user, partner, loyaltyCards, setLoyaltyCards } = mainCtx;
 
   const [error, setError] = useState<null | string>();
   const [loading, setLoading] = useState<boolean>(false)
@@ -101,23 +97,24 @@ const IssuePoints: FC = () => {
   async function handleFinishStepThree() {
     try {
       const partnerDataObj = JSON.parse(partnerData);
-      const { partner_id, expiration_date = null} = partnerDataObj;
+      const { partner_id, code, expiration_date = null} = partnerDataObj;
       const payload = {
         partner_id,
+        code,
         points: parseInt(amount),
         expiration_date: false,
-        program_id : process.env.ODOO_LOYALTY_PROGRAM_ID || 2
+        program_id : parseInt(process.env.NEXT_PUBLIC_ODOO_LOYALTY_PROMGRAM_ID || '2')
       }
       setLoading(true);
 
-      const r = await fetch(`/api/points/issue`, {
+      const r = await fetch(`/api/points/add`, {
         method:"POST",
         body: JSON.stringify(payload)
       });
       const p = await r.json();
-      console.log("[pointIssued]", p)
+      console.log("[pointAdded]", p)
       if(p.error) throw Error(p.error);
-      setPointIssued(p);
+      setPointIssued(p.data);
       setFormStep(4);
       setLoading(false);
       setError(null);
@@ -138,7 +135,8 @@ const IssuePoints: FC = () => {
     <>
       {showDialog && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
-        <div className="bg-white p-4 rounded-md w-96 shadow-md">
+        <Card className="w-96">
+          <CardBody>
             { formStep === 1 &&
               <StepOne handleFinish={handleFinishStepOne}/>
             }
@@ -165,24 +163,27 @@ const IssuePoints: FC = () => {
             }
             { formStep !== 4 &&
              <Button
-              className="mt-4"
+              fullWidth  
+              size="lg"
               onClick={handleDismiss}
-              color="danger" variant="bordered"
+              color="danger"
+              variant="bordered"
             >
               Dismiss
             </Button>}
             
-        </div>
+          </CardBody>
+        </Card>
         </div>
       )}
-
       <Button
-        className="mr-2 mt-4"
-        onClick={handleIssuePoints}
-        color="primary"
-      >
-        Issue Points
-      </Button>
+          size="lg"
+          className="mr-2 mt-4"
+          onClick={handleIssuePoints}
+          color="primary"
+        >
+          Issue Points
+        </Button>
     </>
   );
 };

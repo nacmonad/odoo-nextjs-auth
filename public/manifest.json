@@ -4,9 +4,9 @@
     "display": "standalone",
     "scope": "/",
     "start_url": "/",
-    "name": "SagoOfflinePWA",
-    "short_name": "SagoOfflinePWA",
-    "description": "Boilerplate for testing offline capabilities.",
+    "name": "Rewards App",
+    "short_name": "Rewards App",
+    "description": "An SW for an Odoo Loyalty program app.",
     "icons": [
         {
             "src": "/icon-192x192.png",
