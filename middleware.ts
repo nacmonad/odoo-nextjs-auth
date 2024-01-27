@@ -13,6 +13,8 @@ export async function middleware(req: NextRequest, res:NextResponse) {
 
         //return await fetchUserMiddleware(request)
         const session : IronSessionWithOdoo = await getIronSession(req, res, sessionConfig);
+
+        console.log("[middleware]session", session)
         if(!session) return new NextResponse( JSON.stringify({ status: 403, message:"Forbidden"}))
             
         // Attach the user and partner information to the response for middleware on the server

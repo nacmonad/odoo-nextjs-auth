@@ -12,6 +12,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
    const session : IronSessionWithOdoo = await getIronSession(req, res, sessionConfig);
    const { odoo } = session;
 
+   console.log("/api/points", {
+    odoo
+   })
    if(!odoo) return res.status(500).json({ error: 'NoOdooSession' });
 
    const userId = odoo.uid;
