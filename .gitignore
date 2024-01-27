@@ -3,3 +3,4 @@
 .env.production
 .next
 node_modules
+certs

@@ -8,6 +8,7 @@ import { getIronSession } from 'iron-session';
 import sessionConfig from '@/utils/session';
 import { Providers as ClientProviders } from './providers'
 import { ReactElement } from 'react';
+import { IronSessionWithOdoo } from '@/types/index';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -17,8 +18,8 @@ export default async function RootLayout({
   children: ReactElement,
 }) {
 
-  const session = await getIronSession(cookies(), sessionConfig);
-  const odoo = session?.odoo ? session.odoo : null;
+  const session : IronSessionWithOdoo = await getIronSession(cookies() as any, sessionConfig);
+  const sessionForClient = JSON.parse(JSON.stringify(session));
 
   return (
     <html lang="en">
@@ -27,7 +28,7 @@ export default async function RootLayout({
 
       </head>
       <body className={inter.className}>
-        <IronSessionProvider session={ odoo ? session : null}>
+        <IronSessionProvider session={ sessionForClient }>
           <ClientProviders>{children}</ClientProviders>
         </IronSessionProvider>
       </body>

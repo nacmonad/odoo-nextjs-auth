@@ -34,6 +34,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }))
         .filter(p=>!p.expiration_date || (p.expiration_date && n < new Date(p.expiration_date)));
         
+    console.log("/api/points", { points })
     // // Extract and send the loyalty points in the response
     // const loyaltyPoints = result.length > 0 ? result[0].points || 0 : 0;
      res.status(200).json({ points, total: points.reduce((a,b)=>a+b.points, 0) });

@@ -69,7 +69,7 @@ const NavbarComponent = () => {
         </NavbarContent>
       </NavbarBrand>
       
-      <NavbarContent className="hidden sm:flex gap-4" justify="flex-end">    
+      <NavbarContent className="hidden sm:flex gap-4" justify="end">    
           <ThemeToggle/>        
           <LocationIndicator/>
           <UserMenu/>

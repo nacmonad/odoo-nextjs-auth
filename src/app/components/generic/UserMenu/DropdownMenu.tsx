@@ -21,7 +21,7 @@ export default (props: DropdownMenuprops) => {
 
     console.log("[DropdownMenu]", { mainCtx, user, avatar_128});
     if(!user) return <>
-      <User/>
+      <User as="button" className="transition-transform" name="" description=""/>
       <Skeleton className="w-30 h-12"/>
     </>
     

@@ -1,14 +1,15 @@
 
+// @ts-ignore
 import { cookies } from 'next/headers';
 import {Link} from '@nextui-org/link';
 
 import { getIronSession } from '../../node_modules/iron-session/dist/index.cjs';
 import sessionConfig from '@/utils/session';
-import InstallButton from './components/InstallButton';
+import { IronSessionWithOdoo } from '@/types/index.js';
 
 export default async function Home() {
   const sessionCookies = cookies();
-  const session = await getIronSession(sessionCookies, sessionConfig);
+  const session : IronSessionWithOdoo = await getIronSession(sessionCookies as any, sessionConfig);
   const { odoo } = session;
 
   return (
@@ -37,7 +38,7 @@ export default async function Home() {
             Access the app.
           </p>
         </Link>}
-      <InstallButton/>
+      {/* <InstallButton/> */}
     </main>
   );
 }

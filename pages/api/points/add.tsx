@@ -42,8 +42,7 @@ export default async function handler(
     const loyaltyCardSearchResult = await odooAdminClient.execute_kw(
       'loyalty.card',
       'search_read',
-      [[['code', '=', decrypt(code)]]],
-      { fields: ['id'] }
+      [[['code', '=', decrypt(code)], ['fields', '=', ['id']]]]
     );
 
     if (loyaltyCardSearchResult.length === 0) {

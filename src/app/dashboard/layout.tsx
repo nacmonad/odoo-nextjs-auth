@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google'
 
 import Footer from '@/app/components/Footer';
 import Navbar from '@/app/components/Navbar';
+import { ReactElement } from 'react';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -16,7 +17,7 @@ export const metadata = {
 
 const RootLayout = async function({
   children,
-}) {
+}: { children: ReactElement }) {
 
   return (<main className="flex flex-col h-screen">
             <Navbar/>

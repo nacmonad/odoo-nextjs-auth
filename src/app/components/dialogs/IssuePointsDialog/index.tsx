@@ -1,21 +1,18 @@
 'use client';
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FC } from "react";
-import { UserOdoo, PartnerOdoo,LoyaltyCardOdoo } from "@/types/index";
+import { LoyaltyCardOdoo } from "@/types/index";
 import isPromotions from "@/utils/isPromotions";
 import StepOne from "./StepOne";
 import StepTwo from "./StepTwo";
 import StepFour from "./StepFour";
 import StepThree from "./StepThree";
-import { Button, Card, CardAction, CardBody } from "@nextui-org/react"
+import { Button, } from "@nextui-org/react"
 
 
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
   DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog"
@@ -134,7 +131,6 @@ const IssuePoints: FC = () => {
   return (
     <Dialog>
         <DialogContent className="w-96">
-          <CardBody>
             { formStep === 1 &&
               <StepOne handleFinish={handleFinishStepOne}/>
             }
@@ -172,8 +168,6 @@ const IssuePoints: FC = () => {
               </Button>
              </DialogClose>
             }
-            
-          </CardBody>
         </DialogContent>
       <DialogTrigger asChild>
         <Button

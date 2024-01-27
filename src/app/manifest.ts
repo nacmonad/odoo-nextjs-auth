@@ -9,7 +9,7 @@ export default function manifest(): MetadataRoute.Manifest {
         "src": "/icons/android/android-launchericon-192-192.png",
         "sizes": "192x192",
         "type": "image/png",
-        "purpose": "any maskable"
+        "purpose": "maskable"
       },
       {
         "src": "/icons/android/android-launchericon-512-512.png",
@@ -21,9 +21,6 @@ export default function manifest(): MetadataRoute.Manifest {
     "background_color": "#ca382a",
     "start_url": "/",
     "display": "standalone",
-    "orientation": "portrait",
-    "permissions": {
-      "camera": {}
-    }
+    "orientation": "portrait"
   }
 }
