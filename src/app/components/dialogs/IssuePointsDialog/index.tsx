@@ -9,6 +9,18 @@ import StepFour from "./StepFour";
 import StepThree from "./StepThree";
 import { Button, Card, CardAction, CardBody } from "@nextui-org/react"
 
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose,
+} from "@/components/ui/dialog"
+
+
 import { useMainContext } from "@/contexts/MainContextProvider";
 
 
@@ -56,18 +68,6 @@ const IssuePoints: FC = () => {
 
   if(!isPromotions(user)) return <div>User is not promotions</div>
   if(partner.is_blacklisted) return <div>User/Partner is blacklisted</div>
-
-  function handleDismiss(e: React.MouseEvent<HTMLButtonElement>) {
-    e.preventDefault();
-    setShowDialog(false);
-    setFormStep(1);
-    setPartnerData("No result");
-  }
-
-  function handleIssuePoints(e: React.MouseEvent<HTMLButtonElement>) {
-    e.preventDefault();
-    setShowDialog(true);
-  }
 
   /* Step 1 Finish -- Handles the recipient scan */
   function handleFinishStepOne(result : { data?: string, error?: Error | null }) {
@@ -132,10 +132,8 @@ const IssuePoints: FC = () => {
     error
   })
   return (
-    <>
-      {showDialog && (
-        <div className="fixed inset-0 flex items-center justify-center bg-opacity-75 z-50">
-        <Card className="w-96">
+    <Dialog>
+        <DialogContent className="w-96">
           <CardBody>
             { formStep === 1 &&
               <StepOne handleFinish={handleFinishStepOne}/>
@@ -154,37 +152,39 @@ const IssuePoints: FC = () => {
             }
 
             {/* Close or Dismiss  */}
-            { formStep === 4 &&  <button
-              onClick={handleDismiss}
-              className="bg-green-500 text-white w-full px-4 py-2 mt-4 outline rounded-md"
-            >
-              Close
-            </button>
+            { formStep === 4 &&  <DialogClose asChild>
+                <button
+                className="bg-green-500 text-white w-full px-4 py-2 mt-4 outline rounded-md"
+              >
+                Close
+              </button>
+            </DialogClose>
             }
             { formStep !== 4 &&
-             <Button
-              fullWidth  
-              size="lg"
-              onClick={handleDismiss}
-              color="danger"
-              variant="bordered"
-            >
-              Dismiss
-            </Button>}
+             <DialogClose asChild>
+              <Button
+                fullWidth  
+                size="lg"
+                color="danger"
+                variant="bordered"
+              >
+                Dismiss
+              </Button>
+             </DialogClose>
+            }
             
           </CardBody>
-        </Card>
-        </div>
-      )}
-      <Button
-          fullWidth
-          size="lg"
-          className="mt-4"
-          onClick={handleIssuePoints}
-        >
-          Issue Points
-        </Button>
-    </>
+        </DialogContent>
+      <DialogTrigger asChild>
+        <Button
+            fullWidth
+            size="lg"
+            className="mt-4"
+          >
+            Issue Points
+          </Button>
+      </DialogTrigger>
+    </Dialog>
   );
 };
 

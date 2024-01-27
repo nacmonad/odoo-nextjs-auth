@@ -14,8 +14,6 @@ export default (props: DropdownMenuprops) => {
     const { user } = props;
     const { name, email, avatar_128 } = user ? user : { name:'', email: '', avatar_128: null };
 
-
-
     function handleSignOut() {
       mainCtx.clearContext()
       router.push(`/api/auth/signout`)

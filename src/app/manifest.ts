@@ -1,4 +1,7 @@
-{
+import { MetadataRoute } from 'next'
+ 
+export default function manifest(): MetadataRoute.Manifest {
+  return {
     "name": "Rustcity's Rewards App",
     "short_name": "RustcityRewardsApp",
     "icons": [
@@ -23,4 +26,4 @@
       "camera": {}
     }
   }
-  
+}

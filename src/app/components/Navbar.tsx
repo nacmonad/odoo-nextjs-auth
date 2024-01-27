@@ -54,7 +54,8 @@ const NavbarComponent = () => {
           className="sm:hidden"
         />
       <NavbarBrand>
-        <Image 
+        <Image
+          alt="Brand Logo"
           src={PlaceholderLogo}
           width={48}
           height={48}

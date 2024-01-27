@@ -49,7 +49,8 @@ export const MainContextProvider: React.FC<MainContextProviderProps> = ({ childr
   const [ session, setSession ] = useState<IronSessionWithOdoo|null>(ironSession);
   const { odoo } = session ? session : { odoo: null };
 
-  let user : UserOdoo | undefined, partner: PartnerOdoo | undefined;
+  let user : UserOdoo | null = null, partner: PartnerOdoo | null = null;
+  
   if(odoo?.user && odoo?.partner) {
     user = odoo.user;
     partner = odoo.partner;
@@ -197,6 +198,7 @@ export const MainContextProvider: React.FC<MainContextProviderProps> = ({ childr
     
     let watchId : number | undefined;
     if (navigator.geolocation) {
+      console.log("[mainCtx]location init")
       navigator.geolocation.getCurrentPosition(
         handleLocationChange,
         (error) => {

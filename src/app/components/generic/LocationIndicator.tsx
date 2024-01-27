@@ -9,9 +9,9 @@ export default () => {
 
   const { location } = mainCtx;
 
- if(!location) return <Skeleton className="w-16 h-8"/>
+ //if(!location) return <Skeleton className="w-16 h-8"/>
  return (<div className="text-xs w-16" style={{fontSize:"0.6rem", lineHeight:"0.7rem"}}>
-        <p>Lat:{location.latitude}</p>
-        <p>Long:{location.longitude}</p>
+        <div className="flex flex-row items-center">Lat: {location ? location.latitude : <Skeleton className="w-12 h-2"/>}</div>
+        <div className="flex flex-row items-center">Long:{location ? location.longitude : <Skeleton className="w-12 h-2"/>}</div>
     </div>)
 }
