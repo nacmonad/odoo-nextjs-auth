@@ -4,7 +4,6 @@ import QRCodeReceive from "../../generic/QRCodeReceive";
 import { useMainContext } from "@/contexts/MainContextProvider";
 import {Button} from "@nextui-org/button";
 import { LoyaltyCardOdoo } from "@/types/index";
-import { Card } from "@nextui-org/react";
 
 import {
   Dialog,
@@ -34,6 +33,7 @@ const ReceivePoints: FC<ReceivePointsProps> = ( { initialCards }) => {
     setLoyaltyCards(initialCards);
   }
 
+  console.log("[ReceivePointsDialog]", { initialCards, mainCtx })
   return (
     <Dialog>  
       <DialogContent className="justify-center">
@@ -44,7 +44,7 @@ const ReceivePoints: FC<ReceivePointsProps> = ( { initialCards }) => {
             Scan to receive your points.
           </DialogDescription>
       </DialogHeader>
-        <QRCodeReceive selectedCard={initialCards.length > 0 ? initialCards[0] : null}/>
+        <QRCodeReceive selectedCard={loyaltyCards.length > 0 ? loyaltyCards[0] : null}/>
         <DialogClose asChild>
           <Button
             fullWidth

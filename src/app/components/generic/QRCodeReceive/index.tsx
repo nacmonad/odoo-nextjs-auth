@@ -9,7 +9,7 @@ import { Card, CardHeader, CardBody, CardFooter, Progress } from "@nextui-org/re
 interface QRCodeReceiveProps {
     selectedCard: LoyaltyCardOdoo | null
 }
-/* A server-component based Dialog wrapper component.  Can add client components as children. */
+
 const QRCodeReceive: FC<QRCodeReceiveProps> = ( { selectedCard }) => {
 
     const [loading, setLoading] = useState<boolean>(false);
@@ -22,6 +22,11 @@ const QRCodeReceive: FC<QRCodeReceiveProps> = ( { selectedCard }) => {
 
 
     useEffect(()=>{
+        console.log("[QRCodeReceive]", { 
+            selectedCard,
+            code,
+            qrCode
+        })
         if(!code && !qrCode) {
             console.log("[initCard]here");
             setLoading(true);

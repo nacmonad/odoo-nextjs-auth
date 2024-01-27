@@ -149,8 +149,11 @@ export const MainContextProvider: React.FC<MainContextProviderProps> = ({ childr
           })
         });
         const p = await r.json();
-        console.log("[initLoyaltyCard]", p)
-        setLoyaltyCards([...loyaltyCards, p]);
+        if(!p.success) throw Error("ErrorInitializingLoyaltyCard");
+        const { data } = p;
+        console.log("[initLoyaltyCard]", data)
+        setLoyaltyCards([...loyaltyCards, data]);
+        initQrReceiveCode(data.code);
         if(p.error) throw Error(p.error);
         return p.data;
       } catch(e) {
