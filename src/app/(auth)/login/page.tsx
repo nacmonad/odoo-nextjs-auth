@@ -1,9 +1,8 @@
 'use client';
 // pages/login.js
 import React, { FormEvent, useEffect, useRef, useState } from 'react';
-import {Button} from '@nextui-org/button';
-import {Input} from '@nextui-org/input';
-import {Link} from '@nextui-org/link';
+import {Button, Input, Link } from '@nextui-org/react';
+
 import { useRouter } from 'next/navigation';
 
 interface LoginPageProps {
@@ -56,8 +55,8 @@ const LoginPage : React.FC<LoginPageProps> = ( props ) => {
   }
 
   return (
-      <div className="min-h-screen flex items-center justify-center bg-black text-white">
-        <div className="bg-gray-800 p-8 rounded-md shadow-md text-white w-96">
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="p-8 rounded-md shadow-md">
           <h1 className="text-3xl font-bold mb-6">Login</h1>
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
@@ -92,7 +91,7 @@ const LoginPage : React.FC<LoginPageProps> = ( props ) => {
           {/* Sign-up notice and link */}
           <p className="mt-4">
             Don't have an account? 
-            <Link className="ml-1 text-blue-500" href="/signup">
+            <Link className="ml-1" href="/signup">
               Sign Up
             </Link>
           </p>

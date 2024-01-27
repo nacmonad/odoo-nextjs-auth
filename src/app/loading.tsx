@@ -2,9 +2,9 @@ import React from 'react';
 
 const LoadingFallback = () => {
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-800">
+    <div className="flex items-center justify-center h-screen">
       <svg
-        className="animate-spin h-10 w-10 text-blue-500"
+        className="animate-spin h-10 w-10"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"

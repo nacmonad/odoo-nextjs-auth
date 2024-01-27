@@ -177,10 +177,10 @@ const IssuePoints: FC = () => {
         </div>
       )}
       <Button
+          fullWidth
           size="lg"
-          className="mr-2 mt-4"
+          className="mt-4"
           onClick={handleIssuePoints}
-          color="primary"
         >
           Issue Points
         </Button>

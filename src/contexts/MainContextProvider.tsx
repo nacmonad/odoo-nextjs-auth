@@ -24,10 +24,6 @@ interface MainContextProps {
   clearContext: () => void;
 }
 
-
-
-
-
 // Create the context
 const MainContext = createContext<MainContextProps | undefined>(undefined);
 
@@ -48,25 +44,21 @@ interface MainContextProviderProps {
 
 export const MainContextProvider: React.FC<MainContextProviderProps> = ({ children }) => {
   const session : IronSessionWithOdoo = useIronSession();
-  const { odoo } = session;
+  const { odoo } = session ? session : { odoo: null };
 
   let sessionUser, sessionPartner;
   if(odoo?.user && odoo?.partner) {
     sessionUser = odoo.user;
     sessionPartner = odoo.partner;
-  } 
+  }
   
   
-  const [user, setUser] = useState<UserOdoo | null | undefined>(sessionUser);
-  const [partner, setParner] = useState<PartnerOdoo | null | undefined>(sessionPartner);
   const [location, setLocation] = useState<null|Location>(null);
   const [qrCode, setQrCode] = useState<string|null>(null);
   const [loyaltyCards, setLoyaltyCards] = useState<LoyaltyCardOdoo[] | []>([])
   const [subscription, setSubscription] = useState<PushSubscription | null>(null);
   
   function clearContext() {
-    setUser(null);
-    setParner(null)
     setLocation(null);
     setQrCode(null);
     setSubscription(null);
@@ -225,8 +217,8 @@ export const MainContextProvider: React.FC<MainContextProviderProps> = ({ childr
 
 
 const contextValue: MainContextProps = {
-  user,
-  partner,
+  user: sessionUser,
+  partner: sessionPartner,
   initLoyaltyCard,
   loyaltyCards,
   setLoyaltyCards,
@@ -238,10 +230,9 @@ const contextValue: MainContextProps = {
 };
 console.log("[mainCtx]", {
   odoo,
-  user,
-  partner
+  sessionUser,
+  sessionPartner
 })
-
 
   return <MainContext.Provider value={contextValue}>{children}</MainContext.Provider>;
 };

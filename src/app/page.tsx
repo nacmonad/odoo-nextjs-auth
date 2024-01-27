@@ -10,9 +10,9 @@ export default async function Home() {
   const sessionCookies = cookies();
   const session = await getIronSession(sessionCookies, sessionConfig);
   const { odoo } = session;
-  console.log("/home", odoo);
+
   return (
-    <main className="flex flex-col min-h-screen items-center justify-center bg-gray-900 text-white">
+    <main className="flex flex-col min-h-screen items-center justify-center">
       <h1 className="text-5xl font-bold">Rewards App</h1>
       <Link href="/login" className="group rounded-lg border border-transparent mt-4 px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30" rel="noopener noreferrer">
           <h2 className="text-2xl font-semibold">

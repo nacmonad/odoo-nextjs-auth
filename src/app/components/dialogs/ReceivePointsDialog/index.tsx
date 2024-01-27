@@ -58,9 +58,10 @@ const ReceivePoints: FC<ReceivePointsProps> = ( { initialCards }) => {
       )}
 
       <Button
-        className="ml-2 mt-4"
+        fullWidth
+        size="lg"
+        className="mt-4"
         onClick={handleReceivePoints}
-        color="primary"
       >
         Receive Points
       </Button>

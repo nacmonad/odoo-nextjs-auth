@@ -2,7 +2,7 @@
 
 'use client'
 
-import {NextUIProvider} from "@nextui-org/react";
+import { NextUIProvider } from "@nextui-org/react";
 import { ThemeProvider } from 'next-themes'
 import { ReactNode } from 'react'
 
