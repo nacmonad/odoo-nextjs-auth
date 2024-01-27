@@ -33,6 +33,8 @@ const ReceivePoints: FC<ReceivePointsProps> = ( { initialCards }) => {
     console.log('[ReceivePointsDialog]initLoyaltyCards from page props')
     setLoyaltyCards(initialCards);
   }
+
+  console.log("[ReceivePointsDialog]", {mainCtx})
   return (
     <>
       {showDialog && (

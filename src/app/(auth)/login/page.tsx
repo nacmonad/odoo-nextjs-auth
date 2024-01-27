@@ -4,6 +4,7 @@ import React, { FormEvent, useEffect, useRef, useState } from 'react';
 import {Button, Input, Link } from '@nextui-org/react';
 
 import { useRouter } from 'next/navigation';
+import { useMainContext } from '@/contexts/MainContextProvider';
 
 interface LoginPageProps {
   searchParams: {
@@ -13,7 +14,9 @@ interface LoginPageProps {
 }
 
 
-const LoginPage : React.FC<LoginPageProps> = ( props ) => { 
+const LoginPage : React.FC<LoginPageProps> = ( props ) => {
+  const mainCtx = useMainContext();
+  const { setSession } = mainCtx;
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<null|string>(null);
@@ -43,8 +46,7 @@ const LoginPage : React.FC<LoginPageProps> = ( props ) => {
         body: JSON.stringify({ username, password })
       })
       const u = await r.json();
-      console.log("LoggedIn", u);
-
+      setSession(u);
       if(u.error) setError(u.error);
       if(u.odoo) router.push('/dashboard')
     } catch(e)  {

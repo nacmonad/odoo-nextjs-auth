@@ -134,7 +134,7 @@ const IssuePoints: FC = () => {
   return (
     <>
       {showDialog && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-opacity-75 z-50">
         <Card className="w-96">
           <CardBody>
             { formStep === 1 &&

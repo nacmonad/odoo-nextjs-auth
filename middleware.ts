@@ -8,8 +8,8 @@ export async function middleware(req: NextRequest, res:NextResponse) {
 /* On Every Route */
     if (
           req.nextUrl.pathname.startsWith('/api') || 
-          req.nextUrl.pathname.startsWith('/dashboard')
-        ) {
+          req.nextUrl.pathname.startsWith('/dashboard') 
+      ) {
 
         //return await fetchUserMiddleware(request)
         const session : IronSessionWithOdoo = await getIronSession(req, res, sessionConfig);

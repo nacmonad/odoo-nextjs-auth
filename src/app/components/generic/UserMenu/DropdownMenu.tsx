@@ -2,16 +2,17 @@
 import { UserOdoo } from "@/types/index";
 import {Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Link, Avatar, User} from "@nextui-org/react";
 import { useRouter } from "next/navigation";
-import { Router } from "../../../../../node_modules/next/router";
-import { MainContextProvider, useMainContext } from "@/contexts/MainContextProvider";
+import { useMainContext } from "@/contexts/MainContextProvider";
+import { Skeleton } from "@/components/ui/skeleton";
+
 interface DropdownMenuprops {
-    user: UserOdoo
+    user: null | UserOdoo
 }
 export default (props: DropdownMenuprops) => {
     const mainCtx = useMainContext();
     const router = useRouter();
     const { user } = props;
-    const { name, email, avatar_128 } = user;
+    const { name, email, avatar_128 } = user ? user : { name:'', email: '', avatar_128: null };
 
 
 
@@ -19,7 +20,14 @@ export default (props: DropdownMenuprops) => {
       mainCtx.clearContext()
       router.push(`/api/auth/signout`)
     }
-    return       <Dropdown placement="bottom-end">
+
+    console.log("[DropdownMenu]", { mainCtx, user, avatar_128});
+    if(!user) return <>
+      <User/>
+      <Skeleton className="w-30 h-12"/>
+    </>
+    
+    return <Dropdown className="w-30" placement="bottom-end">
     <DropdownTrigger>
       <User   
         as="button"

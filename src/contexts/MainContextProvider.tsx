@@ -2,7 +2,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { UserOdoo, PartnerOdoo, IronSessionWithOdoo, LoyaltyCardOdoo } from '@/types/index';// Define the shape of your context
+import { UserOdoo, PartnerOdoo, IronSessionWithOdoo, LoyaltyCardOdoo, OdooSession } from '@/types/index';// Define the shape of your context
 
 import { useIronSession } from './IronSessionProvider';
 import { PushSubscription } from 'web-push';
@@ -12,8 +12,8 @@ import logger from '@/logger';
 
 
 interface MainContextProps {
-  user: UserOdoo | null | undefined;
-  partner: PartnerOdoo | null | undefined;
+  user: UserOdoo | null;
+  partner: PartnerOdoo | null;
   qrCode: string | null ;
   initQrReceiveCode: (code: string) => void;
   subscription: PushSubscription | null;
@@ -22,6 +22,8 @@ interface MainContextProps {
   initLoyaltyCard : () => Promise<LoyaltyCardOdoo>;
   setLoyaltyCards : React.Dispatch<React.SetStateAction<LoyaltyCardOdoo[] | []>>;
   clearContext: () => void;
+  session: IronSessionWithOdoo | null,
+  setSession: React.Dispatch<React.SetStateAction<IronSessionWithOdoo | null>>
 }
 
 // Create the context
@@ -43,13 +45,14 @@ interface MainContextProviderProps {
 }
 
 export const MainContextProvider: React.FC<MainContextProviderProps> = ({ children }) => {
-  const session : IronSessionWithOdoo = useIronSession();
+  const ironSession : IronSessionWithOdoo = useIronSession();
+  const [ session, setSession ] = useState<IronSessionWithOdoo|null>(ironSession);
   const { odoo } = session ? session : { odoo: null };
 
-  let sessionUser, sessionPartner;
+  let user : UserOdoo | undefined, partner: PartnerOdoo | undefined;
   if(odoo?.user && odoo?.partner) {
-    sessionUser = odoo.user;
-    sessionPartner = odoo.partner;
+    user = odoo.user;
+    partner = odoo.partner;
   }
   
   
@@ -188,6 +191,8 @@ export const MainContextProvider: React.FC<MainContextProviderProps> = ({ childr
     if(session) {
       initRssFeeds();
       //initQrReceiveCode();
+
+
     }
     
     let watchId : number | undefined;
@@ -217,8 +222,8 @@ export const MainContextProvider: React.FC<MainContextProviderProps> = ({ childr
 
 
 const contextValue: MainContextProps = {
-  user: sessionUser,
-  partner: sessionPartner,
+  user,
+  partner,
   initLoyaltyCard,
   loyaltyCards,
   setLoyaltyCards,
@@ -227,12 +232,9 @@ const contextValue: MainContextProps = {
   qrCode,
   subscription,
   clearContext,
+  session,
+  setSession
 };
-console.log("[mainCtx]", {
-  odoo,
-  sessionUser,
-  sessionPartner
-})
 
   return <MainContext.Provider value={contextValue}>{children}</MainContext.Provider>;
 };

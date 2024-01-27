@@ -15,7 +15,9 @@ import {
 import ThemeToggle from "./generic/ThemeToggle";
 import LocationIndicator from "./generic/LocationIndicator";
 import UserMenu from "./generic/UserMenu";
-import { AcmeLogo } from "@/logos/AcmeLogo";
+import PlaceholderLogo from "../../../public/logo-placeholder.png";
+import Image from 'next/image';
+
 import { useState } from "react";
 
 import { usePathname } from "../../../node_modules/next/dist/client/components/navigation";
@@ -27,6 +29,10 @@ const pages = [{
 {
   title: "Dashboard",
   href: "/dashboard"
+},
+{
+  title: "Shop",
+  href: "/shop"
 },
 {
     title: "Contact",
@@ -48,8 +54,12 @@ const NavbarComponent = () => {
           className="sm:hidden"
         />
       <NavbarBrand>
-        <AcmeLogo />
-        <p className="font-bold text-inherit">ACME</p>
+        <Image 
+          src={PlaceholderLogo}
+          width={48}
+          height={48}
+        />
+        <p className="font-bold text-inherit ml-4">ACME</p>
         <NavbarContent className="hidden sm:flex ml-8">
         {pages.map((p,i) => (
         <NavbarItem key={i} isActive={ currentPath === p.href }>
