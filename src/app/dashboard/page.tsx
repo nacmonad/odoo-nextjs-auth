@@ -5,7 +5,7 @@ import { cookies } from 'next/headers';
 import sessionConfig from '@/utils/session';
 import { getIronSession } from '../../../node_modules/iron-session/dist/index.cjs';
 import { IronSessionWithOdoo } from '@/types/index';
-import PointsCard from './components/PointsCard.jsx';
+import PointsCard from '@/app/dashboard/components/PointsCard';
 
 
 const DashboardPage = async ( ) => {
