@@ -2,17 +2,18 @@
 
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Image from "../../../node_modules/next/image";
+import Image from "next/image";
 
 import AppLogo from "@/assets/logo-placeholder.png";
 
-const TICK_SIZE = 0.6;
+const TICK_SIZE = 0.7;
 
-const ExplosionSequence = () => {
+const Transition = ({children}: {children:React.ReactNode}) => {
   const [boxes, setBoxes] = useState<number[]>([]);
   const [maxDimension, setMaxDimension] = useState(0);
   const [rotationAngle, setRotationAngle] = useState(0);
-  const [showLogo, setShowLogo] = useState(false)
+  const [showLogo, setShowLogo] = useState(false);
+  const [showChildren, setShowChildren] = useState(false);
 
   const explosionVariants = [
     {
@@ -30,7 +31,7 @@ const ExplosionSequence = () => {
         top: `-${maxDimension }px`,
         opacity: 1,
         transition: {
-          duration: TICK_SIZE,
+          duration: 0.5*TICK_SIZE,
           ease: "easeInOut",
         },
       },
@@ -50,7 +51,7 @@ const ExplosionSequence = () => {
         top: `-${maxDimension * 1}px`,
         opacity: 1,
         transition: {
-          duration: TICK_SIZE,
+          duration: 0.5*TICK_SIZE,
           ease: "easeInOut",
         },
       },
@@ -89,48 +90,55 @@ const ExplosionSequence = () => {
       }, 0);
     setTimeout(() => {
       setBoxes(b => [...b, 1]);
-    }, TICK_SIZE*1000);
+    }, 0.5*TICK_SIZE*1000);
 
     setTimeout(() => {
       setBoxes(b => [...b, 2]);
-    }, 2*TICK_SIZE*1000);
+    }, 1*TICK_SIZE*1000);
 
     setTimeout(() => {
         setShowLogo(true);
-      }, 3*TICK_SIZE*1000);
+      }, 2*TICK_SIZE*1000);
+
+      setTimeout(() => {
+        setShowLogo(false);
+        setShowChildren(true);
+      }, 4*TICK_SIZE*1000);
 
   }, []);
 
   return (
     <div className="relative overflow-hidden" style={{ width: "100vw", height: "100vh" }}>
       <AnimatePresence>
-        {boxes.map((index) => (
+        {!showChildren && boxes.map((index) => (
           <motion.div
             key={`explosion${index + 1}`}
             initial="initial"
             animate="animate"
-            exit="initial"
+            exit={{opacity:0}}
             variants={explosionVariants[index]}
-            transition={{ delay: index * 0.5 }} // Adjust the delay as needed
             style={{ backgroundColor: explosionColors[index], position: "absolute" , opacity: 0.25}}
           />
         ))}
 
-        <div className="flex items-center justify-center w-full h-full">
-            {showLogo && 
+        {!showChildren && showLogo && <div className="flex items-center justify-center w-full h-full"> 
                 <motion.div 
                     className="relative"
                     initial={{opacity:0}}
                     animate={{opacity:1}}
-                    transition={{ duration: 0.5, ease: "easeInOut" }}
+                    exit={{opacity:0}}
+                    transition={{ duration: TICK_SIZE/2, ease: "easeOut" }}
                     style={{zIndex:999}}
                 >
                 <Image src={AppLogo} width={200} height={200} alt="Your Logo"/>
-            </motion.div>}
-        </div>
+            </motion.div>
+        </div>}
       </AnimatePresence>
+      {showChildren && <>{children}</>}
+
     </div>
   );
+
 };
 
-export default ExplosionSequence;
+export default Transition;

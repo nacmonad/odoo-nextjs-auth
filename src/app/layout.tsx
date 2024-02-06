@@ -9,7 +9,7 @@ import sessionConfig from '@/utils/session';
 import { Providers as ClientProviders } from './providers'
 import { ReactElement } from 'react';
 import { IronSessionWithOdoo } from '@/types/index';
-
+import Transition from './transition';
 const inter = Inter({ subsets: ['latin'] })
 
 export default async function RootLayout({
@@ -29,7 +29,12 @@ export default async function RootLayout({
       </head>
       <body className={inter.className}>
         <IronSessionProvider session={ sessionForClient }>
-          <ClientProviders>{children}</ClientProviders>
+          <ClientProviders>
+          <Transition>
+
+            {children}
+            </Transition>
+            </ClientProviders>
         </IronSessionProvider>
       </body>
     </html>
