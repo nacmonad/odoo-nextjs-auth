@@ -2,8 +2,8 @@
 import { IronSessionConfig } from '@/types';
 
 const sessionConfig: IronSessionConfig = {
-  cookieName: 'the_trading_post',
-  password: 'n8usE4r47zEmvPyu6tPeTBf1uBUzLJFL', // Make sure to use a strong, unique password
+  cookieName: process.env.COOKIE_NAME,
+  password: process.env.COOKIE_PASSWORD,
   cookieOptions: {
     secure: process.env.NODE_ENV === 'production',
   },
