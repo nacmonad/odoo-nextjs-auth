@@ -6,11 +6,7 @@ const IV_LENGTH = 16;
 
 export function encrypt(text: string): string {
     if(!ENCRYPTION_KEY) throw Error("EncryptionKeyNotProvided");
-    console.log("[encrypt]", {
-      text,
-      ENCRYPTION_KEY,
-      key_length:ENCRYPTION_KEY.length
-    })
+
   const iv = crypto.randomBytes(IV_LENGTH);
   console.log("iv", iv);
 
